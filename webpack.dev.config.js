@@ -3,6 +3,7 @@
 var config = require('./webpack.base.config.js');
 
 config.devServer = {
+  port: 3000,
   contentBase: 'src',
   stats: {
     colors: true
