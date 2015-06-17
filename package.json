@@ -1,0 +1,88 @@
+{
+  "name": "wristband-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmrc/wristband-frontend.git"
+  },
+  "homepage": "https://github.com/hmrc/wristband-frontend",
+  "author": "HMRC",
+  "contributors": [{
+    "name": "Ryan Grenz",
+    "email": "ryan.grenz@digital.hmrc.gov.uk"
+  }, {
+    "name": "Rory Powis",
+    "email": "rory.powis@digital.hmrc.gov.uk"
+  }],
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "jsx"
+    ],
+    "testFileExtensions": [
+      "js"
+    ],
+    "testDirectoryName": "unit",
+    "testPathDirs": [
+      "<rootDir>/tests/"
+    ]
+  },
+  "dependencies": {
+    "react": "0.13.2",
+    "react-router": "0.13.2",
+    "react-tools": "0.13.2"
+  },
+  "devDependencies": {
+    "autoprefixer-core": "^5.1.11",
+    "babel": "^5.1.11",
+    "babel-core": "^5.1.11",
+    "babel-eslint": "^3.0.1",
+    "babel-jest": "^5.0.1",
+    "babel-loader": "^5.0.0",
+    "babel-runtime": "^5.1.11",
+    "compression-webpack-plugin": "^0.2.0",
+    "css-loader": "^0.11.0",
+    "csswring": "^3.0.4",
+    "eslint": "^0.20.0",
+    "eslint-loader": "^0.11.1",
+    "eslint-plugin-react": "^2.2.0",
+    "extract-text-webpack-plugin": "^0.7.0",
+    "flowcheck": "^0.2.6",
+    "flowcheck-loader": "^1.0.0",
+    "graceful-fs": "^3.0.6",
+    "html-minifier": "^0.7.2",
+    "immutable": "3.7.2",
+    "jest": "^0.1.39",
+    "jest-cli": "^0.4.0",
+    "jsx-loader": "0.13.1",
+    "nightwatch": "0.6.4",
+    "npm-check-updates": "1.5.1",
+    "react-hot-loader": "^1.2.5",
+    "script-loader": "0.6.1",
+    "selenium-standalone": "4.4.0",
+    "style-loader": "0.11.0",
+    "stylus-loader": "1.1.0",
+    "url-loader": "0.5.5",
+    "webpack": "^1.8.9",
+    "webpack-dev-server": "^1.8.2"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "upgrade": "npm-check-updates -u && npm test",
+    "test": "jest",
+    "browser": "nightwatch -e firefox,chrome",
+    "prestart": "npm install",
+    "start": "webpack-dev-server --config webpack.dev.config.js --hot --inline -d",
+    "prebuild": "npm install",
+    "build": "rm -rf dist/ && webpack",
+    "dist": "npm test && npm run build && npm run browser"
+  }
+}
