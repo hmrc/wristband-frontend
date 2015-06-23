@@ -1,12 +1,6 @@
 /* @flow */
 import React from 'react/addons';
 import { RouteHandler } from 'react-router';
-import {
-  Grid,
-  Unit,
-  Column,
-  Dropdown,
-} from 'react-semantify';
 
 import '../vendor/semantic/dist/semantic.css';
 import '../vendor/semantic/dist/semantic.js';
