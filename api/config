@@ -1,0 +1,74 @@
+{
+  "apps": [
+    {
+      "name": "test-1",
+      "side": "left",
+      "qa": {
+        "version": "0.0.5"
+      },
+      "staging": {
+        "version": "0.0.4"
+      }
+    },
+    {
+      "name": "test-2",
+      "side": "left",
+      "qa": {
+        "version": "0.0.3"
+      },
+      "staging": {
+        "version": "0.0.2"
+      }
+    },
+    {
+        "name": "something-else",
+        "side": "right",
+        "qa": {
+            "version": "0.0.2"
+        },
+        "staging": {
+            "version": "0.0.1"
+        }
+    },
+    {
+        "name": "another-app",
+        "side": "left",
+        "qa": {
+            "version": "1.0.4"
+        },
+        "staging": {
+            "version": "1.0.2"
+        }
+    },
+    {
+        "name": "some-stubs",
+        "side": "right",
+        "qa": {
+            "version": "0.0.3"
+        },
+        "staging": {
+            "version": "0.0.2"
+        }
+    },
+    {
+        "name": "test-dk3",
+        "side": "left",
+        "qa": {
+            "version": "0.0.2"
+        },
+        "staging": {
+            "version": "0.0.1"
+        }
+    },
+    {
+        "name": "test-4",
+        "side": "right",
+        "qa": {
+            "version": "0.0.5"
+        },
+        "staging": {
+            "version": "0.0.4"
+        }
+    }
+  ]
+}
