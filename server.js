@@ -49,8 +49,7 @@ var svc = (isProduction) ? app : server;
 module.exports = {
   start: function(callback) {
     // Frontend webpack dev
-    var bundle = require('./bundle.js');
-    bundle(function() {
+    var devServer = require('./webpack.dev.config.js')(function() {
       svc.listen(port, function () {
         console.log('Server running on port ' + port);
         if (typeof callback === 'function') { callback(); }
