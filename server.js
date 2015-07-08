@@ -13,6 +13,8 @@ var publicPath = path.resolve(__dirname, 'public');
 
 app.use(express.static(publicPath));
 
+proxy.on('error', function(err, req, res) {});
+
 if (!isProduction) {
 
   // Frontend webpack dev
