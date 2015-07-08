@@ -9,7 +9,6 @@ var config = require('./webpack.base.config.js');
 config.bail = true;
 config.debug = false;
 config.profile = false;
-config.devtool = '#source-map';
 config.output = {
   path: './dist/js',
   pathInfo: false,
