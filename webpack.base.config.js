@@ -1,20 +1,25 @@
 'use strict';
 
 var webpack = require('webpack');
+var path = require('path');
+var nodeModulesPath = path.resolve(__dirname, 'node_modules');
+var vendorPath = path.resolve(__dirname, 'src', 'vendor');
+var buildPath = path.resolve(__dirname, 'dist', 'js');
+var mainPath = path.resolve(__dirname, 'src', 'entry.jsx');
 
 module.exports = {
   target: 'web',
-  entry: './src/entry.jsx',
+  entry: [ mainPath ],
   output: {
-    path: './dist/js',
+    path: buildPath,
     pathInfo: true,
-    publicPath: '/js/',
+    publicPath: '/build/',
     filename: 'main.js',
     css: 'style.css'
   },
   module: {
     preLoaders: [
-      {test: /\.js(x)?$/, loader: 'eslint-loader', exclude: /node_modules/}
+      {test: /\.js(x)?$/, loader: 'eslint-loader', exclude: [nodeModulesPath, vendorPath]}
     ],
     loaders: [
       {test: /\.png$/, loader: 'url?mimetype=image/png'},
@@ -33,6 +38,11 @@ module.exports = {
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV)
       }
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery'
     })
   ]
 };
