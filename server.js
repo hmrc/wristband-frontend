@@ -8,7 +8,7 @@ var proxy = httpProxy.createProxyServer({
 });
 var app = express();
 var isProduction = process.env.NODE_ENV === 'production';
-var port = isProduction ? process.env.PORT : 3000;
+var port = process.env.PORT || 3000;
 var publicPath = path.resolve(__dirname, 'public');
 
 app.use(express.static(publicPath));
@@ -16,10 +16,6 @@ app.use(express.static(publicPath));
 proxy.on('error', function(err, req, res) {});
 
 if (!isProduction) {
-
-  // Frontend webpack dev
-  var bundle = require('./bundle.js');
-  bundle();
   app.all('/build/*', function (req, res) {
     proxy.web(req, res, {
       target: 'http://localhost:3001'
@@ -46,16 +42,26 @@ if (!isProduction) {
   server.on('upgrade', function (req, socket, head) {
     proxy.ws(req, socket, head);
   });
-
-  server.listen(port, function () {
-    console.log('Server running on port ' + port);
-  });
-
-} else {
-
-  // And run the server
-  app.listen(port, function () {
-    console.log('Server running on port ' + port);
-  });
-
 }
+
+var svc = (isProduction) ? app : server;
+
+module.exports = {
+  start: function(callback) {
+    // Frontend webpack dev
+    var bundle = require('./bundle.js');
+    bundle(function() {
+      svc.listen(port, function () {
+        console.log('Server running on port ' + port);
+        if (typeof callback === 'function') { callback(); }
+      });
+    });
+  },
+
+  stop: function(callback) {
+    svc.close(function() {
+      console.log('Wristband stopped.');
+      if (typeof callback === 'function') { callback(); }
+    });
+  }
+};

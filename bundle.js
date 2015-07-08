@@ -5,11 +5,16 @@ var path = require('path');
 var fs = require('fs');
 var mainPath = path.resolve(__dirname, '..', 'src', 'entry.jsx');
 
-module.exports = function () {
+module.exports = function (callback) {
 
   // First we fire up Webpack an pass in the configuration we
   // created
   var bundleStart = null;
+
+  if( process.env.NODE_ENV === 'test' ) {
+    webpackConfig.devServer.noInfo = true;
+  }
+
   var compiler = Webpack(webpackConfig);
 
   // We give notice in the terminal when it starts bundling and
@@ -25,6 +30,8 @@ module.exports = function () {
     console.log('Bundled in ' + (Date.now() - bundleStart) + 'ms!');
   });
 
+  compiler.run(callback);
+  
   var bundler = new WebpackDevServer(compiler, webpackConfig.devServer);
 
   // We fire up the development server and give notice in the terminal
