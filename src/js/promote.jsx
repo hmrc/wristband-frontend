@@ -14,13 +14,16 @@ export default class Promote extends React.Component {
     super();
 
     this.rowGetter = this.rowGetter.bind(this);
+    this.promoteApp = this.promoteApp.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
     this.deployButtonRenderer = this.deployButtonRenderer.bind(this);
 
     this.state = {
       envs: [],
       filterBy: '',
-      filteredRows: []
+      filteredRows: [],
+      buildProgress: 0,
+      promotedApp: null
     };
   }
 
@@ -82,15 +85,50 @@ export default class Promote extends React.Component {
     this.filterRowsBy(e.target.value);
   }
 
-  promoteApp(e) {
-    e.preventDefault();
-    // TODO: AJAX req
+  promoteApp(app, index, event) {
+    event.preventDefault();
+
+    var envToPromoteTo = '',
+        versionToPromote = '',
+        appToPromote = this.props.apps[index];
+
+    // TODO: iterate envs config instead
+    // which environment to promote to
+    this.props.envs[Object.keys(this.props.envs)[1]].forEach(
+      env => {
+        if (env in appToPromote.envs) {
+          envToPromoteTo = env;
+        }
+      }
+    );
+
+    // version to promote
+    this.props.envs[Object.keys(this.props.envs)[0]].forEach(
+      env => {
+        if ( env in appToPromote.envs ) {
+          versionToPromote = appToPromote.envs[env].versions[0].ver;
+        }
+      }
+    );
+
+    // TODO: disable the button instead
+    if ( versionToPromote ) {
+      this.setState({
+        promotedApp: index
+      });
+
+      this.triggerPromotion(appToPromote, versionToPromote, envToPromoteTo);
+    }
   }
 
-  deployButtonRenderer() {
+  triggerPromotion(app, ver, env) {
+    var url = '/api/promote/' + env + '/' + app.name + '/' + ver;
+  }
+
+  deployButtonRenderer(cellData, cellDataKey, rowData, rowIndex) {
     return (
       // TODO: disable button if no version in left env column
-      <button className="ui red button" onClick={this.promoteApp}>
+      <button className="ui red button" onClick={this.promoteApp.bind(null, rowData, rowIndex)}>
         Deploy <i className="chevron right icon"></i>
       </button>
     );
