@@ -93,7 +93,8 @@ export default class Promote extends React.Component {
 
     var envToPromoteTo = '',
         versionToPromote = '',
-        appToPromote = this.props.apps[index];
+        appToPromote = this.state.filteredRows[index];
+
 
     // TODO: iterate envs config instead
     // which environment to promote to
