@@ -1,4 +1,7 @@
 import React from 'react';
+import Reqwest from 'reqwest';
+import ClassNames from 'classnames';
+import Progress from 'react-progress';
 import RouteHandler from 'react-router';
 import FixedDataTable from 'fixed-data-table';
 
@@ -123,13 +126,94 @@ export default class Promote extends React.Component {
 
   triggerPromotion(app, ver, env) {
     var url = '/api/promote/' + env + '/' + app.name + '/' + ver;
+
+    Reqwest({
+      url,
+      method: 'post',
+      type: 'json'
+    })
+    .then(
+      resp => {
+        this.getBuildId(resp.queue_id, env);
+      }
+    )
+    .fail( (err, msg) => {
+      console.error('AJAX Error: ', err, msg);
+    });
+  }
+
+  getBuildId(queueId, env) {
+    var url = '/api/build/' + env + '/' + queueId;
+
+    Reqwest({
+      url,
+      type: 'json'
+    })
+    .then( resp => {
+      if(!resp.build_id) {
+        this.getBuildId(queueId, env);
+      }
+      else {
+        this.setState({
+        }, this.getProgress(env, resp));
+      }
+    })
+    .fail( (err, msg) => {
+      console.error('AJAX Error: ', err, msg);
+    });
+  }
+
+  getProgress(env, build) {
+    var url = '/api/progress/' + env + '/' + build.build_id;
+
+    Reqwest({
+      url,
+      type: 'json'
+    })
+    .then( resp => {
+      if(resp.progress !== 1) {
+        this.setState({
+          buildProgress: Math.floor(resp.progress * 100)
+        }, this.getProgress(env, build));
+      }
+      else {
+        this.setState({
+          promotedApp: null,
+          buildProgress: 0
+        });
+      }
+    })
+    .fail( (err, msg) => {
+      console.error('AJAX Error: ', err, msg);
+    });
   }
 
   deployButtonRenderer(cellData, cellDataKey, rowData, rowIndex) {
+    var wasClicked = this.state.promotedApp === rowIndex,
+        isDeploying = wasClicked && !!this.state.buildProgress;
+
+    var buttonClasses = ClassNames({
+      'ui button': true,
+      'red': !wasClicked
+    });
+
+    var iconClasses = ClassNames({
+      'right icon': true,
+      'chevron': !wasClicked,
+      'notched circle loading': wasClicked
+    });
+
+    var progressBar = isDeploying ? (
+      <Progress percent={this.state.buildProgress}/>
+    ) : '';
+
+    var buttonText = isDeploying ? 'Deploying' : wasClicked ? 'Pending' : 'Deploy';
+
     return (
       // TODO: disable button if no version in left env column
       <button className="ui red button" onClick={this.promoteApp.bind(null, rowData, rowIndex)}>
-        Deploy <i className="chevron right icon"></i>
+        {buttonText} <i className={iconClasses}></i>
+        {progressBar}
       </button>
     );
   }
@@ -164,6 +248,7 @@ export default class Promote extends React.Component {
       <div>
         <div className="ui icon input">
           <input
+            ref="inputText"
             type="text"
             onChange={this.onFilterChange}
             placeholder='Filter Services..'
