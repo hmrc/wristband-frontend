@@ -46,6 +46,7 @@
     "react-tools": "0.13.2",
     "reqwest": "^1.1.5",
     "semantic-ui": "^1.12.3"
+    "semantic-ui": "^2.0.3"
   },
   "devDependencies": {
     "autoprefixer-core": "^5.1.11",
