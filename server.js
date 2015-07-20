@@ -60,7 +60,9 @@ module.exports = {
   stop: function(callback) {
     svc.close(function() {
       console.log('Wristband stopped.');
-      if (typeof callback === 'function') { callback(); }
+      if (typeof callback === 'function') {
+        callback();
+      }
     });
   }
 };
