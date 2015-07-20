@@ -61,7 +61,8 @@ export default class Promote extends React.Component {
           appEnv => {
             var re = new RegExp(env.title, 'i');
             if ( re.test(appEnv) ) {
-              appData[this.state.envs[i].key] = app.envs[appEnv].versions[0].ver;
+              var key = this.state.envs[i].key;
+              appData[key] = app.envs[appEnv].versions[0].ver;
             }
           }
         );
@@ -208,11 +209,19 @@ export default class Promote extends React.Component {
       <Progress percent={this.state.buildProgress}/>
     ) : '';
 
-    var buttonText = isDeploying ? 'Deploying' : wasClicked ? 'Pending' : 'Deploy';
+    var buttonText = isDeploying
+                       ? 'Deploying'
+                       : wasClicked
+                           ? 'Pending'
+                           : 'Deploy';
+
+    var row = rowData[rowIndex];
 
     return (
       // TODO: disable button if no version in left env column
-      <button className="ui red button" onClick={this.promoteApp.bind(null, rowData, rowIndex)}>
+      <button
+        className="ui red button"
+        onClick={this.promoteApp.bind(null, rowData, rowIndex)}>
         {buttonText} <i className={iconClasses}></i>
         {progressBar}
       </button>

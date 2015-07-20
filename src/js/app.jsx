@@ -24,7 +24,9 @@ export default class App extends React.Component {
   }
 
   setMiddleColWidth() {
-    this.state.middleColWidth = React.findDOMNode(this.refs.middleCol).offsetWidth;
+    this.state.middleColWidth = React
+                                .findDOMNode(this.refs.middleCol)
+                                .offsetWidth;
     this.forceUpdate();
   }
 
