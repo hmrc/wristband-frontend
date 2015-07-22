@@ -4,6 +4,7 @@ import ClassNames from 'classnames';
 import Progress from 'react-progress';
 import RouteHandler from 'react-router';
 import FixedDataTable from 'fixed-data-table';
+import EventSource from 'event-source';
 
 import '../../node_modules/fixed-data-table/dist/fixed-data-table.css';
 import '../vendor/semantic/dist/semantic.css';
@@ -129,64 +130,24 @@ export default class Promote extends React.Component {
   triggerPromotion(app, ver, env) {
     var url = '/api/promote/' + env + '/' + app.name + '/' + ver;
 
-    Reqwest({
-      url,
-      method: 'post',
-      type: 'json'
-    })
-    .then(
-      resp => {
-        this.getBuildId(resp.queue_id, env);
-      }
-    )
-    .fail( (err, msg) => {
-      console.error('AJAX Error: ', err, msg);
+    var evtSource = new EventSource(url);
+    evtSource.addEventListener('queued', e => {
+      console.log(e);
     });
-  }
 
-  getBuildId(queueId, env) {
-    var url = '/api/build/' + env + '/' + queueId;
-
-    Reqwest({
-      url,
-      type: 'json'
-    })
-    .then( resp => {
-      if(!resp.build_id) {
-        this.getBuildId(queueId, env);
-      }
-      else {
-        this.setState({
-        }, this.getProgress(env, resp));
-      }
-    })
-    .fail( (err, msg) => {
-      console.error('AJAX Error: ', err, msg);
+    evtSource.addEventListener('building', e => {
+      var progress = JSON.parse(e.data);
+      this.setState({
+        buildProgress: progress.percent
+      });
     });
-  }
 
-  getProgress(env, build) {
-    var url = '/api/progress/' + env + '/' + build.build_id;
-
-    Reqwest({
-      url,
-      type: 'json'
-    })
-    .then( resp => {
-      if(resp.progress !== 1) {
-        this.setState({
-          buildProgress: Math.floor(resp.progress * 100)
-        }, this.getProgress(env, build));
-      }
-      else {
-        this.setState({
-          promotedApp: null,
-          buildProgress: 0
-        });
-      }
-    })
-    .fail( (err, msg) => {
-      console.error('AJAX Error: ', err, msg);
+    evtSource.addEventListener('success', e => {
+      this.setState({
+        promotedApp: null,
+        buildProgress: 0
+      });
+      evtSource.close();
     });
   }
 
@@ -215,12 +176,12 @@ export default class Promote extends React.Component {
                            ? 'Pending'
                            : 'Deploy';
 
-    var row = rowData[rowIndex];
-
     return (
       // TODO: disable button if no version in left env column
       <button
         className="ui red button"
+        id={'deploy-' + rowData.appName}
+        key={rowData.appName}
         onClick={this.promoteApp.bind(null, rowData, rowIndex)}>
         {buttonText} <i className={iconClasses}></i>
         {progressBar}
@@ -253,6 +214,9 @@ export default class Promote extends React.Component {
         key="deploy"
         />
     ));
+    if (!this.state.filteredRows.length) {
+      return false;
+    }
 
     return (
       <div>
