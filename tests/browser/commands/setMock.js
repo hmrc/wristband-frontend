@@ -38,9 +38,9 @@ SetMock.prototype.command = function(opts, callback) {
   });
 
   mockServer.listen(hydraConfig.port, function() {
-    // if (!hydraConfig.quiet) {
+    if (!hydraConfig.quiet) {
       console.log('Mock server setup with config: ' + JSON.stringify(hydraConfig));
-    // }
+    }
     self.emit('complete');
   })
 
