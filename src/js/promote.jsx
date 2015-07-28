@@ -6,9 +6,9 @@ import RouteHandler from 'react-router';
 import FixedDataTable from 'fixed-data-table';
 import EventSource from 'event-source';
 
-import '../../node_modules/fixed-data-table/dist/fixed-data-table.css';
-import '../vendor/semantic/dist/semantic.css';
-import '../scss/styles.css';
+import 'fixed-data-table/dist/fixed-data-table.css';
+import 'semantic-ui-css/semantic.css';
+import '../css/styles.css';
 
 var Table = FixedDataTable.Table;
 var Column = FixedDataTable.Column;
