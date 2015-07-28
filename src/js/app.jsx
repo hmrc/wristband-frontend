@@ -4,8 +4,8 @@ import Reqwest from 'reqwest';
 
 import Promote from './promote.jsx';
 
-import '../vendor/semantic/dist/semantic.css';
-import '../scss/styles.css';
+import 'semantic-ui-css/semantic.css';
+import '../css/styles.css';
 
 export default class App extends React.Component {
   constructor() {
