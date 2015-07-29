@@ -1,1 +1,1 @@
-web: node server
+web: npm run serve:prod
