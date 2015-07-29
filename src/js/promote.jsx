@@ -214,9 +214,6 @@ export default class Promote extends React.Component {
         key="deploy"
         />
     ));
-    if (!this.state.filteredRows.length) {
-      return false;
-    }
 
     return (
       <div>
