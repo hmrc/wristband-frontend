@@ -1,48 +1,50 @@
 // Prime a mock endpoint
-var util = require('util');
-var mockClient = require('mockserver-client')
+var util = require('util'),
+    events = require('events'),
+    _ = require('underscore'),
+    robohydra = require('robohydra');
 
-var mockApiPath = __dirname + '/../mocks';
-var mockHost = 'localhost';
-var mockApiBaseUri = '/api';
+function SetMock() {
+  events.EventEmitter.call(this);
+}
 
-exports.command = function(mockOpts, callback) {
+util.inherits(SetMock, events.EventEmitter);
+
+SetMock.prototype.command = function(opts, callback) {
   var self = this,
-      fs = require('fs');
+      globals = this.client.api.globals;
 
-  if (typeof mockOpts !== 'object') {
-    throw "Mock options passed as '" + mockOpts + "'. Must be an object containing 'uri' and 'using' props.";
+  if (typeof opts !== 'object' || !opts.hasOwnProperty('mock')) {
+    throw "setMock options are incorrectly set.";
   }
 
-  if (!mockOpts.hasOwnProperty('uri') || !mockOpts.hasOwnProperty('using')) {
-    throw "Mock options must contain 'uri' and 'using' props. You had: " + util.inspect(mockOpts);
-  }
+  var hydraConfig = _.clone(globals.roboHydraConfig);
+  hydraConfig.plugins = (Array.isArray(opts.mock))
+                          ? _.union(hydraConfig.plugins, opts.mock)
+                          : [ opts.mock ];
 
-  mockOpts.statusCode = mockOpts.statusCode || 200;
+  var mockServer = robohydra.createRoboHydraServer(hydraConfig);
+  globals.roboHydraInstances[this.client.sessionId] = mockServer;
 
-  try {
-    var mockFile = mockApiPath + mockOpts.using;
-    mockOpts.mockData = fs.readFileSync(mockFile);
-  } catch (err) {
-    console.log(err);
-    throw "Unable to open mock content file: " + mockFile;
-  }
+  // Wrap nightwatch's end() method to tear down the mock at testcase end
+  // TODO: Not working yet..
+  this.client.api.end = _.wrap(this.client.api.end, function(end) {
+    var mockInstance = globals.roboHydraInstances[self.client.sessionId];
+    mockInstance.close(function() {
+      delete mockInstance;
+      console.log('Mock server torn down.');
+      end();
+    });
+  });
 
-  this.execute(
-    function(mockOpts) {
-      mockClient(mockHost, mockOpts.config.serverPort)
-        .mockSimpleResponse(mockOpts.uri, mockOpts.mockData, mockOpts.statusCode);
-      return true;
-    },
-
-    [mockOpts], // arguments array to be passed
-
-    function(result) {
-      if (typeof callback === "function") {
-        callback.call(self, result);
-      }
+  mockServer.listen(hydraConfig.port, function() {
+    if (!hydraConfig.quiet) {
+      console.log('Mock server setup with config: ' + JSON.stringify(hydraConfig));
     }
-  );
+    self.emit('complete');
+  })
 
   return this; // allows the command to be chained.
 };
+
+module.exports = SetMock;

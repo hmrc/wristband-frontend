@@ -4,10 +4,11 @@ import ClassNames from 'classnames';
 import Progress from 'react-progress';
 import RouteHandler from 'react-router';
 import FixedDataTable from 'fixed-data-table';
+import EventSource from 'event-source';
 
-import '../../node_modules/fixed-data-table/dist/fixed-data-table.css';
-import '../vendor/semantic/dist/semantic.css';
-import '../scss/styles.css';
+import 'fixed-data-table/dist/fixed-data-table.css';
+import 'semantic-ui-css/semantic.css';
+import '../css/styles.css';
 
 var Table = FixedDataTable.Table;
 var Column = FixedDataTable.Column;
@@ -61,7 +62,8 @@ export default class Promote extends React.Component {
           appEnv => {
             var re = new RegExp(env.title, 'i');
             if ( re.test(appEnv) ) {
-              appData[this.state.envs[i].key] = app.envs[appEnv].versions[0].ver;
+              var key = this.state.envs[i].key;
+              appData[key] = app.envs[appEnv].versions[0].ver;
             }
           }
         );
@@ -93,7 +95,8 @@ export default class Promote extends React.Component {
 
     var envToPromoteTo = '',
         versionToPromote = '',
-        appToPromote = this.props.apps[index];
+        appToPromote = this.state.filteredRows[index];
+
 
     // TODO: iterate envs config instead
     // which environment to promote to
@@ -127,64 +130,24 @@ export default class Promote extends React.Component {
   triggerPromotion(app, ver, env) {
     var url = '/api/promote/' + env + '/' + app.name + '/' + ver;
 
-    Reqwest({
-      url,
-      method: 'post',
-      type: 'json'
-    })
-    .then(
-      resp => {
-        this.getBuildId(resp.queue_id, env);
-      }
-    )
-    .fail( (err, msg) => {
-      console.error('AJAX Error: ', err, msg);
+    var evtSource = new EventSource(url);
+    evtSource.addEventListener('queued', e => {
+      console.log(e);
     });
-  }
 
-  getBuildId(queueId, env) {
-    var url = '/api/build/' + env + '/' + queueId;
-
-    Reqwest({
-      url,
-      type: 'json'
-    })
-    .then( resp => {
-      if(!resp.build_id) {
-        this.getBuildId(queueId, env);
-      }
-      else {
-        this.setState({
-        }, this.getProgress(env, resp));
-      }
-    })
-    .fail( (err, msg) => {
-      console.error('AJAX Error: ', err, msg);
+    evtSource.addEventListener('building', e => {
+      var progress = JSON.parse(e.data);
+      this.setState({
+        buildProgress: progress.percent
+      });
     });
-  }
 
-  getProgress(env, build) {
-    var url = '/api/progress/' + env + '/' + build.build_id;
-
-    Reqwest({
-      url,
-      type: 'json'
-    })
-    .then( resp => {
-      if(resp.progress !== 1) {
-        this.setState({
-          buildProgress: Math.floor(resp.progress * 100)
-        }, this.getProgress(env, build));
-      }
-      else {
-        this.setState({
-          promotedApp: null,
-          buildProgress: 0
-        });
-      }
-    })
-    .fail( (err, msg) => {
-      console.error('AJAX Error: ', err, msg);
+    evtSource.addEventListener('success', e => {
+      this.setState({
+        promotedApp: null,
+        buildProgress: 0
+      });
+      evtSource.close();
     });
   }
 
@@ -207,11 +170,19 @@ export default class Promote extends React.Component {
       <Progress percent={this.state.buildProgress}/>
     ) : '';
 
-    var buttonText = isDeploying ? 'Deploying' : wasClicked ? 'Pending' : 'Deploy';
+    var buttonText = isDeploying
+                       ? 'Deploying'
+                       : wasClicked
+                           ? 'Pending'
+                           : 'Deploy';
 
     return (
       // TODO: disable button if no version in left env column
-      <button className="ui red button" onClick={this.promoteApp.bind(null, rowData, rowIndex)}>
+      <button
+        className="ui red button"
+        id={'deploy-' + rowData.appName}
+        key={rowData.appName}
+        onClick={this.promoteApp.bind(null, rowData, rowIndex)}>
         {buttonText} <i className={iconClasses}></i>
         {progressBar}
       </button>

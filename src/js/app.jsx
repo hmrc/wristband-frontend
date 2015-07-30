@@ -4,8 +4,8 @@ import Reqwest from 'reqwest';
 
 import Promote from './promote.jsx';
 
-import '../vendor/semantic/dist/semantic.css';
-import '../scss/styles.css';
+import 'semantic-ui-css/semantic.css';
+import '../css/styles.css';
 
 export default class App extends React.Component {
   constructor() {
@@ -24,7 +24,9 @@ export default class App extends React.Component {
   }
 
   setMiddleColWidth() {
-    this.state.middleColWidth = React.findDOMNode(this.refs.middleCol).offsetWidth;
+    this.state.middleColWidth = React
+                                .findDOMNode(this.refs.middleCol)
+                                .offsetWidth;
     this.forceUpdate();
   }
 
