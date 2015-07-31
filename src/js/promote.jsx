@@ -63,7 +63,7 @@ export default class Promote extends React.Component {
             var re = new RegExp(env.title, 'i');
             if ( re.test(appEnv) ) {
               var key = this.state.envs[i].key;
-              appData[key] = app.envs[appEnv].versions[0].ver;
+              appData[key] = app.envs[appEnv].versions[0].version;
             }
           }
         );
@@ -128,7 +128,7 @@ export default class Promote extends React.Component {
   }
 
   triggerPromotion(app, ver, env) {
-    var url = '/api/promote/' + env + '/' + app.name + '/' + ver;
+    var url = '/api/v1/promote/' + env + '/' + app.name + '/' + ver;
 
     var evtSource = new EventSource(url);
     evtSource.addEventListener('queued', e => {

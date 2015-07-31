@@ -32,7 +32,7 @@ export default class App extends React.Component {
 
   fetchData() {
     Reqwest({
-      url: '/api/config',
+      url: '/api/v1/config',
       type: 'json'
     })
     .then( (resp) => {
