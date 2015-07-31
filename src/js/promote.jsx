@@ -112,7 +112,7 @@ export default class Promote extends React.Component {
     this.props.envs[Object.keys(this.props.envs)[0]].forEach(
       env => {
         if ( env in appToPromote.envs ) {
-          versionToPromote = appToPromote.envs[env].versions[0].ver;
+          versionToPromote = appToPromote.envs[env].versions[0].version;
         }
       }
     );
