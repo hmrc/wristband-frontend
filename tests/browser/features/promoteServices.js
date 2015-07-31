@@ -26,7 +26,7 @@ module.exports = {
       .expect.element(progressBar).to.have.attribute('style').which.contains('width: 100%').before(2000);
 
     browser
-        .expect.element(deployBtn).text.to.equal('Deploy').before(15000);
+      .expect.element(deployBtn).text.to.equal('Deploy').before(15000);
 
     browser.end();
   }
