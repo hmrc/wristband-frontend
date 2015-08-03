@@ -49,13 +49,13 @@ exports.getBodyParts = function() {
     heads: [
       new RoboHydraHead({
         name: 'App Promotions (staggered response)',
-        path: '/api/promote/.*',
+        path: '/api/v1/promote/.*',
         handler: delayedWrite
       }),
 
       new RoboHydraHead({
         name: 'App Promotions (text/event-stream)',
-        path: '/api/promote/.*',
+        path: '/api/v1/promote/.*',
         // method: 'POST',
         handler: function(req, res) {
           res.headers['content-type'] = 'text/event-stream';
