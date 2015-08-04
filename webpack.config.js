@@ -11,8 +11,6 @@ config.module.loaders = config.module.loaders.concat([
   {test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1!postcss')}
 ]);
 
-config.loader.configEnvironment = env;
-
 config.plugins = config.plugins.concat(
     [
       new ExtractTextPlugin(config.output.css),
@@ -33,6 +31,11 @@ config.plugins = config.plugins.concat(
             }
 
             fs.writeFile('./dist/index.html', data, 'utf8', function(writeErr) {
+              if (writeErr) return console.log(writeErr);
+            });
+          });
+          fs.mkdir('./dist/ping',function(e){
+            fs.writeFile('./dist/ping/ping', '', 'utf8', function(writeErr) {
               if (writeErr) return console.log(writeErr);
             });
           });
