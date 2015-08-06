@@ -8,7 +8,7 @@ var config = require('./webpack.base.config.js');
 
 config.module.loaders = config.module.loaders.concat([
   {test: /\.jsx?$/, loader: 'babel?optional=runtime', exclude: /node_modules/},
-  {test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1!postcss')}
+  {test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css')}
 ]);
 
 config.plugins = config.plugins.concat(
