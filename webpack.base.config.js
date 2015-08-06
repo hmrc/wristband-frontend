@@ -1,10 +1,10 @@
 'use strict';
 
-var webpack = require('webpack');
 var path = require('path');
+var webpack = require('webpack');
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var vendorPath = path.resolve(__dirname, 'src', 'vendor');
-var buildPath = path.resolve(__dirname, 'dist', 'js');
+var buildPath = path.resolve(__dirname, 'dist', 'build');
 var mainPath = path.resolve(__dirname, 'src', 'entry.jsx');
 
 module.exports = {
