@@ -4,7 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var production = process.env.NODE_ENV === 'production';
 var env = production ? 'production' : 'development';
-var config = production ? require('./webpack.prod.config.js') : require('./webpack.base.config.js');
+var config = require('./webpack.base.config.js');
 
 config.module.loaders = config.module.loaders.concat([
   {test: /\.jsx?$/, loader: 'babel?optional=runtime', exclude: /node_modules/},
@@ -25,10 +25,6 @@ config.plugins = config.plugins.concat(
                 '</head>',
                 '<link rel="stylesheet" href="/js/style.css"/></head>'
             );
-
-            if (production) {
-              data = config.revFiles(data, stats.toJson().assets);
-            }
 
             fs.writeFile('./dist/index.html', data, 'utf8', function(writeErr) {
               if (writeErr) return console.log(writeErr);
