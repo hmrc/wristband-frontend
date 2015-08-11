@@ -6,6 +6,8 @@ var production = process.env.NODE_ENV === 'production';
 var env = production ? 'production' : 'development';
 var config = require('./webpack.base.config.js');
 
+config.bail = true;
+
 config.module.loaders = config.module.loaders.concat([
   {test: /\.jsx?$/, loader: 'babel?optional=runtime', exclude: /node_modules/},
   {test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css')}
