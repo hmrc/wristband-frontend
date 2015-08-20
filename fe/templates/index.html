@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<form class="search ui form js-show">
+  <div class="field">
+    <div class="ui left icon input huge">
+      <i class="search icon"></i>
+      <input type="text" placeholder="Search...">
+    </div>
+  </div>
+  <div class="ui submit button hidden">Submit</div>
+</form>
+
+<table class="ui center aligned striped table">
+  <thead class="large-only">
+    <tr>
+      <th class="app left aligned">App</th>
+      <th class="stage">QA</th>
+      <th class="deploy"></th>
+      <th class="stage">Staging</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!--
+      For the purposes of this spike, the table is built using javascript instead
+        of the API/backend. The javascript to do this is within build-apps-table.js.
+
+      When this spike is turned into a real application, we'll need to change this
+        <template> into Jinja code.
+    -->
+    <template id="row">
+      <tr>
+        <td class="app left aligned">
+          <h2 class="ui header">app.name</h2>
+        </td>
+        <td class="stage">
+          <span class="mobile-only">QA </span><span class="ui label large">app.qa</span>
+        </td>
+        <td class="deploy">
+          <button class="ui basic teal right labeled icon button">
+            <i class="right arrow icon large-only"></i>
+            <i class="down arrow icon mobile-only"></i>
+            <span class="text">Deploy</span>
+          </button>
+        </td>
+        <td class="stage">
+          <span class="mobile-only">Staging </span><span class="ui label large">app.staging</span>
+        </td>
+      </tr>
+    </template>
+  </tbody>
+</table>
+
+{% endblock %}

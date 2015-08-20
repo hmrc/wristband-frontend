@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Wristband</title>
+
+  <!-- add a js class to the <html> tag for use in CSS -->
+  <script>document.documentElement.className += 'js';</script>
+
+  <link rel="stylesheet" type="text/css" href="/static/css/lib/semantic.css">
+  <!-- styles: small amount of override styles from semantic -->
+  <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+</head>
+<body>
+
+  <div class="ui container">
+    {% block body %}{% endblock %}
+  </div>
+
+  <script src="/static/js/lib/jquery.js"></script>
+  <script src="/static/js/lib/dataTables.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+
+  <!-- build-apps-table: populate the apps table with example app data -->
+  <script src="/static/js/build-apps-table.js"></script>
+
+  <!-- deploy-button-behaviour: defines how the deploy button should act -->
+  <script src="/static/js/deploy-button-behaviour.js"></script>
+
+  <!-- filter-app-table-by-name: defines the behaviour for searching the apps table -->
+  <script src="/static/js/filter-app-table-by-name.js"></script>
+
+  <!-- script: any other scripts that benefit the app -->
+  <script src="/static/js/script.js"></script>
+
+  <!-- events: the socket.io frontend events, to accompany events.py -->
+  <script src="/static/js/events.js"></script>
+
+</body>
+</html>

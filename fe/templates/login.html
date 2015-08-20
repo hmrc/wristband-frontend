@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<form action="/" method="get" class="ui login form vertical-align">
+    <h1 class="ui dividing header">Wristband</h1>
+
+    <div class="three fields">
+
+      <div class="field">
+        <div class="ui input huge">
+          <input type="text" placeholder="Username">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="ui input huge">
+          <input type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+        </div>
+      </div>
+
+      <button type="submit" class="ui big teal button">Login</button>
+
+    </div>
+</form>
+
+{% endblock %}
