@@ -4,19 +4,19 @@ __all__ = [
 
 from flask import render_template
 
-apps = {
-    "test": {
-        "stage": [
-            {
-                "stage": "qa",
+apps = [
+    {
+        "name": "test",
+        "stage": {
+            "qa": {
                 "version": "0.0.2",
-            }, {
-                "stage": "staging",
+            },
+            "staging": {
                 "version": "0.0.1",
             }
-        ]
+        }
     }
-}
+]
 
 def index():
     return render_template('index.html', apps=apps)

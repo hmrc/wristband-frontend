@@ -29,13 +29,13 @@
       When this spike is turned into a real application, we'll need to change this
         <template> into Jinja code.
     -->
-    <template id="row">
+    {% for app in apps %}
       <tr>
         <td class="app left aligned">
-          <h2 class="ui header">app.name</h2>
+          <h2 class="ui header">{{ app.name }}</h2>
         </td>
         <td class="stage">
-          <span class="mobile-only">QA </span><span class="ui label large">app.qa</span>
+          <span class="mobile-only">QA </span><span class="ui label large">{{ app.stage.qa.version }}</span>
         </td>
         <td class="deploy">
           <button class="ui basic teal right labeled icon button">
@@ -45,10 +45,10 @@
           </button>
         </td>
         <td class="stage">
-          <span class="mobile-only">Staging </span><span class="ui label large">app.staging</span>
+          <span class="mobile-only">Staging </span><span class="ui label large">{{ app.stage.staging.version }}</span>
         </td>
       </tr>
-    </template>
+    {% endfor %}
   </tbody>
 </table>
 
