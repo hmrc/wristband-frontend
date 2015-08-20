@@ -1,6 +1,6 @@
 __all__ = [
     "get_apps"
-    "do_promotion"
+    "do_deploy"
 ]
 
 from flask import render_template, request, redirect, url_for, abort
@@ -18,7 +18,7 @@ apps = {
     }
 }
 
-_promoting_apps = {
+_deploying_apps = {
 }
 
 
@@ -28,7 +28,7 @@ def get_apps():
         apps=[dict({"name": app_name}.items() + app_details.items()) for app_name, app_details in apps.items()])
 
 
-def do_promotion():
+def do_deploy():
     app = request.form["app"]
     version = request.form["version"]
     stage = request.form["stage"]

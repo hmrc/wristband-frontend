@@ -11,7 +11,7 @@ def create_app(config_object=None):
         app.config.from_object(config_object)
 
     app.add_url_rule('/', view_func=views.get_apps, methods=['GET'])
-    app.add_url_rule('/promote', view_func=views.do_promotion, methods=['POST'])
+    app.add_url_rule('/deploy', view_func=views.do_deploy, methods=['POST'])
 
     #socketio = SocketIO()
     #socketio.init_app(app)

@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-{% block head %}
-<meta http-equiv="refresh" content="5">
-{% endblock%}
-
 {% block body %}
 
 <form class="search ui form js-show">
@@ -26,13 +22,6 @@
     </tr>
   </thead>
   <tbody>
-    <!--
-      For the purposes of this spike, the table is built using javascript instead
-        of the API/backend. The javascript to do this is within build-apps-table.js.
-
-      When this spike is turned into a real application, we'll need to change this
-        <template> into Jinja code.
-    -->
     {% for app in apps %}
       <tr>
         <td class="app left aligned">
@@ -41,19 +30,17 @@
         <td class="stage">
           <span class="mobile-only">QA </span><span class="ui label large">{{ app.stage.qa.version }}</span>
         </td>
-
-        <form action="/promote" method="post" id="promote-form">
+        <td class="deploy">
+          <form action="/deploy" method="post">
             <input type="hidden" name="app" value="{{ app.name }}">
             <input type="hidden" name="version" value="{{ app.stage.qa.version }}">
             <input type="hidden" name="stage" value="staging">
-        </form> 
-
-        <td class="deploy">
-          <button class="ui basic teal right labeled icon button" form="promote-form">
-            <i class="right arrow icon large-only"></i>
-            <i class="down arrow icon mobile-only"></i>
-            <span class="text">Deploy</span>
-          </button>
+            <button class="ui basic teal right labeled icon button">
+              <i class="right arrow icon large-only"></i>
+              <i class="down arrow icon mobile-only"></i>
+              <span class="text">Deploy</span>
+            </button>
+          </form>
         </td>
         <td class="stage">
           <span class="mobile-only">Staging </span><span class="ui label large">{{ app.stage.staging.version }}</span>

@@ -33,6 +33,7 @@
     var $prev = $deploy.prev('.stage');
     var $next = $deploy.next('.stage');
     var $row = $this.closest('tr');
+    var $form = $this.closest('form');
 
     $this
       .mouseover(function () {
@@ -45,12 +46,28 @@
         // remove the highlight from the to-be-deployed version
         $prev.find('.label').removeClass(colourClass);
       })
-      .click(function () {
+      .click(function (e) {
+        // prevent the form from submitting
+        e.preventDefault();
+
         // hide this button, and add the DeployingTemplate
         $this.mouseout().hide().after(deployingTemplate($prev.find('.label').text()));
 
         // add a class to the button to track state
         $this.addClass('deploying');
+
+        $.ajax({
+          type: 'POST',
+          url: '/deploy',
+          data: $form.serialize(),
+          success: function (data) {
+            /*
+              we maybe don't want to do anything here?
+                the /deploy POST should push updates to all UIs to say the
+                button was clicked, and a deployment is in progress
+            */
+          }
+        })
       })
     ;
   });
