@@ -8,8 +8,8 @@ from flask import session, current_app
 import requests
 
 
-def get_login():
-    return render_template('login.html')
+def get_login(error=None):
+    return render_template('login.html', error=error)
 
 
 def do_login():
@@ -17,7 +17,13 @@ def do_login():
     # expect back an access token to be stored in a session for use in future API calls
     if "fakeauth" in session:
         return redirect(url_for('get_apps'))
+    session.clear()
     r = requests.post("{}login/".format(current_app.config["API_URI"]), request.form)
+    try:
+        r.raise_for_status()
+    except requests.HTTPError as e:
+        if e.response.status_code == 401:
+            return redirect(url_for('get_login', error="bad username or password"))
     session["username"] = request.form["username"]
     session["fakeauth"] = r.content
     return redirect(url_for('get_apps'))
@@ -39,17 +45,11 @@ def get_apps():
             for a in apps
         ]
     except requests.HTTPError as e:
-        if e.response.status_code:
+        if e.response.status_code == 401:
             return redirect(url_for('get_login'))
     return render_template(
         'index.html',
         apps=apps, username=session["username"])
-
-def login():
-    if request.method == "GET":
-        return render_template('login.html')
-    elif request.method == "POST":
-        return redirect(url_for('login'))
 
 
 def do_deploy():
