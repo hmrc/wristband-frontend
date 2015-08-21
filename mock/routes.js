@@ -1,4 +1,4 @@
-var auth_header = 'fakeauth';
+  var auth_header = 'fakeauth';
 
 // data
 var apps = require('./data/apps');

@@ -2,6 +2,17 @@
 
 {% block body %}
 
+<div class="ui secondary pointing menu">
+  <span class="active item">
+    Wristband
+  </span>
+  <div class="right menu">
+    <span class="ui item">
+      {{ username }} (<a href="logout">logout</a>)
+    </span>
+  </div>
+</div>
+
 <form class="search ui form js-show">
   <div class="field">
     <div class="ui left icon input huge">
