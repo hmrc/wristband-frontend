@@ -15,6 +15,8 @@ def get_login():
 def do_login():
     # POST to the API/login with the username and password for validation
     # expect back an access token to be stored in a session for use in future API calls
+    if session["fakeauth"]:
+        return redirect(url_for('get_apps'))
     r = requests.post("{}login/".format(current_app.config["API_URI"]), request.form)
     session["username"] = request.form["username"]
     session["fakeauth"] = r.content
