@@ -8,7 +8,7 @@
   </span>
   <div class="right menu">
     <span class="ui item">
-      <span class="large-only">{{ username }}&nbsp;</span>(<a href="logout">logout</a>)
+      <strong class="large-only">{{ username }}&nbsp;</strong>(<a href="logout">logout</a>)
     </span>
   </div>
 </div>
@@ -16,7 +16,7 @@
 <form class="search ui form js-show">
   <div class="field">
     <div class="ui left icon input huge">
-      <i class="search icon"></i>
+      <i class="search icon teal"></i>
       <input type="text" placeholder="Search...">
     </div>
   </div>
@@ -34,7 +34,7 @@
   </thead>
   <tbody>
     {% for app in apps %}
-      <tr>
+      <tr{% if "jobid" in app.stages.staging %} class="deploying"{% endif %}>
         <td class="app left aligned">
           <h2 class="ui header">{{ app.name }}</h2>
         </td>
@@ -42,16 +42,27 @@
           <span class="mobile-only">QA </span><span class="ui label large">{{ app.stages.qa.version }}</span>
         </td>
         <td class="deploy">
-          <form action="/deploy" method="post">
-            <input type="hidden" name="app" value="{{ app.name }}">
-            <input type="hidden" name="version" value="{{ app.stages.qa.version }}">
-            <input type="hidden" name="stage" value="staging">
-            <button class="ui basic teal right labeled icon button">
-              <i class="right arrow icon large-only"></i>
-              <i class="down arrow icon mobile-only"></i>
-              <span class="text">Deploy</span>
-            </button>
-          </form>
+          {% if app.stages.qa.version != app.stages.staging.version %}
+
+            <form action="/deploy" method="post"{% if "jobid" in app.stages.staging %} style="display: none;"{% endif %}>
+              <input type="hidden" name="app" value="{{ app.name }}">
+              <input type="hidden" name="version" value="{{ app.stages.qa.version }}">
+              <input type="hidden" name="stage" value="staging">
+              <button class="ui basic teal right labeled icon button">
+                <i class="right arrow icon large-only"></i>
+                <i class="down arrow icon mobile-only"></i>
+                <span class="text">Deploy</span>
+              </button>
+            </form>
+
+            <div class="ui buttons"{% if "jobid" not in app.stages.staging %} style="display: none;"{% endif %}>
+              <button class="ui teal right icon button">
+                <span class="text">{{ app.stages.qa.version }} <i class="right arrow icon large-only"></i><i class="down arrow icon mobile-only"></i></span>
+              </button>
+              <button class="ui button loading teal"></button>
+            </div>
+
+          {% endif %}
         </td>
         <td class="stage">
           <span class="mobile-only">Staging </span><span class="ui label large">{{ app.stages.staging.version }}</span>

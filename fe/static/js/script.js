@@ -5,7 +5,9 @@
     $(this).addClass('loading');
   });
 
-  // every 5 minutes, trasparently refresh the page
+  $('input:first').focus();
+
+  // every 10 seconds, trasparently refresh the page
   setInterval(function () {
     $.ajax({
       url: window.location.href,
@@ -13,12 +15,14 @@
           var $table = $('table');
           $table.after($(data).find('table'));
           $table.remove();
+
+          setResultsTable($('table'));
       },
       error: function () {
-        // if there's an error, you're probably not logged in, so redirect
+        // if there's an error, you're probably not logged in, so redirect10 *
         window.location.reload();
       }
     });
-  }, 5 * 60 * 1000);
+  }, 10 * 1000);
 
 }());

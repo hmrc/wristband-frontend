@@ -1,0 +1,7 @@
+.search.form {
+  width: 300px;
+}
+
+.search.form .ui.icon.input>i.icon {
+  opacity: 1;
+}

@@ -48,4 +48,20 @@ module.exports = function (app) {
     res.json(stages[req.params.name]);
   });
 
+  app.put('/apps/:app/stages/:stage/version/:version', function(req, res) {
+    var app = apps[req.params.app];
+    var stage = app.stages[app.stages.map(function (stage) { return stage.name }).indexOf(req.params.stage)];
+
+    var id = utils.id();
+
+    stage.jobid = id;
+
+    setTimeout(function () {
+      delete stage.jobid;
+      stage.version = req.params.version;
+    }, 9 + (Math.random() * 21) * 1000);
+
+    res.send(id);
+  });
+
 };

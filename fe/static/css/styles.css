@@ -1,6 +1,8 @@
 @import 'utils.css';
 @import 'login-form.css';
 @import 'apps-table.css';
+@import 'search-form.css';
+@import 'menu.css';
 
 html, body, .container {
   height: 100%;
@@ -14,15 +16,8 @@ body > .ui.container {
   margin-top: 3em;
 }
 
-.search.form {
-  width: 300px;
+a {
+  color: #00b5ad;
 }
 
-.secondary.menu {
-  margin-bottom: 3em;
-  font-size: 1.5em;
-}
 
-.secondary.menu .right.menu {
-  font-size: 0.8em;
-}

@@ -31,7 +31,7 @@ def do_login():
 
 def do_logout():
     session.clear()
-    return redirect(url_for('get_apps'))
+    return redirect(url_for('get_login'))
 
 
 def get_apps():
@@ -47,7 +47,7 @@ def get_apps():
         ]
     except requests.HTTPError as e:
         if e.response.status_code == 401:
-            return redirect(url_for('get_login'))
+            return redirect(url_for('do_logout'))
     return render_template(
         'index.html',
         apps=apps, username=session["username"])
@@ -55,7 +55,13 @@ def get_apps():
 
 def do_deploy():
     app = request.form["app"]
-    version = request.form["version"]
     stage = request.form["stage"]
-    apps[app]["stage"][stage]["version"] = version
+    version = request.form["version"]
+
+    fake_auth_header = session.get("fakeauth", None)
+    headers = {"fakeauth": fake_auth_header} if fake_auth_header else {}
+
+    r = requests.put("{}apps/{}/stages/{}/version/{}".format(current_app.config["API_URI"], app, stage, version), headers=headers)
+    r.raise_for_status()
+
     return redirect(url_for('get_apps'))

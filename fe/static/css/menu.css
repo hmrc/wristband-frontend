@@ -1,0 +1,12 @@
+.secondary.menu {
+  margin-bottom: 3em;
+  font-size: 1.5em;
+}
+
+.secondary.menu .right.menu {
+  font-size: 0.8em;
+}
+
+.secondary.menu .right.menu a {
+  margin: 0 0.125em;
+}

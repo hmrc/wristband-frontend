@@ -18,7 +18,22 @@
     'info': false
   });
 
+  window.setResultsTable = function ($newTable) {
+    resultsTable = $newTable.DataTable({
+      'paging': false,
+      'ordering': false,
+      'info': false
+    });
+
+    lookup();
+  };
+
   var keyupTimeout;
+
+  function lookup() {
+    // perform the DataTable lookup based on the input value
+    resultsTable.search($('.search.form input').val()).draw();
+  }
 
   $('.search.form input').keyup(function (e) {
     clearTimeout(keyupTimeout);
@@ -34,12 +49,11 @@
     // cache DOM requests
     var $this = $(this);
     var $input = $this.closest('.input');
-    var value = $this.val();
 
     $input.addClass('loading');
 
     // perform the DataTable lookup based on the input value
-    resultsTable.search(value).draw();
+    lookup();
 
     /*
       simulate a 250ms lookup time. In reality it's instantaneous, but the feedback
