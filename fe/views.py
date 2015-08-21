@@ -8,7 +8,8 @@ from flask import session, current_app
 import requests
 
 
-def get_login(error=None):
+def get_login():
+    error=request.args.get('error', None)
     return render_template('login.html', error=error)
 
 

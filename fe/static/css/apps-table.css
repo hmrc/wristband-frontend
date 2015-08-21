@@ -1,0 +1,41 @@
+.ui.table {
+  table-layout: fixed;
+}
+
+.table .header {
+  font-weight: 200;
+}
+
+.table .stage {
+  width: 100px;
+}
+
+.table .deploy {
+  width: 140px;
+}
+
+.ui.table td {
+  padding: .71428571em 0;
+}
+
+.ui.table .app {
+  padding: .71428571em;
+}
+
+.dataTables_filter {
+  display: none;
+}
+
+.ui.label, .ui.button {
+  transition: none;
+}
+
+.ui.button.teal:hover, .ui.button.teal:focus {
+  background: #00b5ad;
+}
+
+.table .deploying .header {
+  font-weight: 500;
+  letter-spacing: -1px;
+  color: #00b5ad;
+}

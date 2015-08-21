@@ -1,0 +1,14 @@
+@media screen and (min-width: 768px) {
+  .login.form {
+    width: 50%;
+    margin: -5em auto 0;
+  }
+}
+
+.login.form input {
+  width: 33%;
+}
+
+.login.form .secondary.menu {
+  margin-bottom: 1em;
+}

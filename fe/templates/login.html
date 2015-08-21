@@ -2,11 +2,15 @@
 
 {% block body %}
 
-<form action="/login" method="post" class="ui login form vertical-align">
+<form action="/login" method="post" class="ui login form vertical-align{% if error == 'bad_login' %} error{% endif %}">
     <div class="ui secondary pointing menu">
       <span class="active item">
         Wristband
       </span>
+    </div>
+
+    <div class="ui error message">
+      <p>Incorrect username/password</p>
     </div>
 
     <div class="three fields">

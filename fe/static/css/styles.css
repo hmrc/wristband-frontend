@@ -1,103 +1,21 @@
-body > .ui.container {
-  margin-top: 3em;
-}
+@import 'utils.css';
+@import 'login-form.css';
+@import 'apps-table.css';
 
-.ui.table {
-  table-layout: fixed;
-}
-
-.search.form {
-  width: 300px;
-}
-
-.table .header {
-  font-weight: 200;
-}
-
-.table .stage {
-  width: 100px;
-}
-
-.table .deploy {
-  width: 140px;
-}
-
-.ui.table td {
-  padding: .71428571em 0;
-}
-
-.ui.table .app {
-  padding: .71428571em;
-}
-
-.hidden {
-  position: absolute;
-  top: -999em;
-  left: -999em;
-  width: 1px;
-  height: 1px;
-}
-
-.js-show {
-  display: none;
-}
-.js .js-show {
-  display: block;
-}
-
-.ui.label, .ui.button {
-  transition: none;
-}
-
-.dataTables_filter {
-  display: none;
-}
-
-@media screen and (min-width: 768px) {
-  .mobile-only {
-    display: none !important;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .large-only {
-    display: none !important;
-  }
+html, body, .container {
+  height: 100%;
 }
 
 body {
   border-top: solid 10px #1b1c1d;
 }
 
-.ui.button.teal:hover, .ui.button.teal:focus {
-  background: #00b5ad;
+body > .ui.container {
+  margin-top: 3em;
 }
 
-html, body, .container {
-  height: 100%;
-}
-
-.login.form {
-  width: 50%;
-  margin: -3em auto 0;
-}
-
-.login.form input {
-  width: 33%;
-}
-
-.vertical-align {
-  position: relative;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-
-.table .deploying .header {
-  font-weight: 500;
-  letter-spacing: -1px;
-  color: #00b5ad;
+.search.form {
+  width: 300px;
 }
 
 .secondary.menu {

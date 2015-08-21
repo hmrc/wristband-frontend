@@ -1,0 +1,36 @@
+@media screen and (min-width: 768px) {
+  .vertical-align {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+}
+
+.hidden {
+  position: absolute;
+  top: -999em;
+  left: -999em;
+  width: 1px;
+  height: 1px;
+}
+
+.js-show {
+  display: none;
+}
+.js .js-show {
+  display: block;
+}
+
+@media screen and (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .large-only {
+    display: none !important;
+  }
+}
