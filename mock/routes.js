@@ -3,22 +3,28 @@ var auth_header = 'fakeauth';
 // data
 var apps = require('./data/apps');
 var stages = require('./data/stages');
+var users = require('./data/users');
 
 // modules
-var uuids = require('./uuids');
 var utils = require('./utils');
+
+var uuids = [];
 
 module.exports = function (app) {
 
-  app.all('/login', function (req, res) {
-    var id = uuids.new();
+  app.post('/login', function (req, res) {
+    if (!utils.contains(users, req.body.username)) {
+      return res.send(401);
+    }
+
+    var id = utils.id();
     uuids.push(id);
-    res.send(200, id + '');
+    res.send(200, id);
   });
 
   // authenticate all other requests
   app.all('*', function (req, res, next) {
-    if (!uuids.contains(req.headers[auth_header])) {
+    if (!utils.contains(uuids, req.headers[auth_header])) {
       return res.send(401);
     }
 

@@ -21,6 +21,14 @@ apps = {
 _deploying_apps = {
 }
 
+def get_login():
+    return render_template('login.html')
+
+def do_login():
+    # POST to the API/login with the username and password for validation
+    # expect back an access token to be stored in a session for use in future API calls
+    return 'logged in as ' + request.form["username"]
+
 
 def get_apps():
     return render_template(

@@ -2,20 +2,20 @@
 
 {% block body %}
 
-<form action="/" method="get" class="ui login form vertical-align">
+<form action="/login" method="post" class="ui login form vertical-align">
     <h1 class="ui dividing header">Wristband</h1>
 
     <div class="three fields">
 
       <div class="field">
         <div class="ui input huge">
-          <input type="text" placeholder="Username">
+          <input type="text" name="username" placeholder="Username">
         </div>
       </div>
 
       <div class="field">
         <div class="ui input huge">
-          <input type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+          <input type="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
         </div>
       </div>
 
