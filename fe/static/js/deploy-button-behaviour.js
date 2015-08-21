@@ -25,6 +25,17 @@
     '</div>';
   };
 
+  var setButtonAsDeploying = function ($this, version) {
+    // hide this button, and revert label state
+    $this.mouseout().hide();
+
+    // add the DeployingTemplate
+    $this.after(deployingTemplate(version));
+
+    // add a class to the button to track state
+    $this.closest('tr').addClass('deploying');
+  };
+
   $('.deploy .button').each(function () {
 
     // cache DOM requests
@@ -38,7 +49,7 @@
     $this
       .mouseover(function () {
         // highlight the version that will be deployed
-        if ($this.hasClass('deploying')) return false;
+        if ($row.hasClass('deploying')) return false;
 
         $prev.find('.label').addClass(colourClass);
       })
@@ -50,11 +61,7 @@
         // prevent the form from submitting
         e.preventDefault();
 
-        // hide this button, and add the DeployingTemplate
-        $this.mouseout().hide().after(deployingTemplate($prev.find('.label').text()));
-
-        // add a class to the button to track state
-        $this.addClass('deploying');
+        setButtonAsDeploying($this, $prev.find('.label').text());
 
         $.ajax({
           type: 'POST',
