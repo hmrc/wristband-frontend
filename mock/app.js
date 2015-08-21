@@ -23,55 +23,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/apps/', function(req, res) {
-  res.json([
-      {
-          "name": "test",
-          "stage": {
-              "qa": {
-                  "version": "0.0.2",
-              },
-              "staging": {
-                  "version": "0.0.1",
-              }
-          }
-      }
-  ]);
-});
-
-app.get('/apps/:name', function(req, res) {
-  res.json({
-      "name": "test",
-      "stage": {
-          "qa": {
-              "version": "0.0.2",
-          },
-          "staging": {
-              "version": "0.0.1",
-          }
-      }
-  });
-});
-
-app.get('/stages/', function(req, res) {
-  res.json([
-      {
-          "name": "qa"
-      },
-      {
-        "name": "staging"
-      }
-  ]);
-});
-
-app.get('/stages/:name/apps', function(req, res) {
-  res.json([
-      {
-          "name": "test",
-          "version": "0.0.2"
-      }
-  ]);
-});
+require('./routes')(app);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
