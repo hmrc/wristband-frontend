@@ -28,12 +28,12 @@
           <h2 class="ui header">{{ app.name }}</h2>
         </td>
         <td class="stage">
-          <span class="mobile-only">QA </span><span class="ui label large">{{ app.stage.qa.version }}</span>
+          <span class="mobile-only">QA </span><span class="ui label large">{{ app.stages.qa.version }}</span>
         </td>
         <td class="deploy">
           <form action="/deploy" method="post">
             <input type="hidden" name="app" value="{{ app.name }}">
-            <input type="hidden" name="version" value="{{ app.stage.qa.version }}">
+            <input type="hidden" name="version" value="{{ app.stages.qa.version }}">
             <input type="hidden" name="stage" value="staging">
             <button class="ui basic teal right labeled icon button">
               <i class="right arrow icon large-only"></i>
@@ -43,7 +43,7 @@
           </form>
         </td>
         <td class="stage">
-          <span class="mobile-only">Staging </span><span class="ui label large">{{ app.stage.staging.version }}</span>
+          <span class="mobile-only">Staging </span><span class="ui label large">{{ app.stages.staging.version }}</span>
         </td>
       </tr>
     {% endfor %}
