@@ -31,20 +31,15 @@ module.exports = function (app) {
   });
 
   app.get('/apps/:name', function(req, res) {
-    res.json(apps[req.query.name]);
+    res.json(apps[req.params.name]);
   });
 
   app.get('/stages/', function(req, res) {
     res.json(utils.asArray(stages));
   });
 
-  app.get('/stages/:name/apps', function(req, res) {
-    res.json([
-        {
-            "name": "test",
-            "version": "0.0.2"
-        }
-    ]);
+  app.get('/stages/:name', function(req, res) {
+    res.json(stages[req.params.name]);
   });
 
 };
