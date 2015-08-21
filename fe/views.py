@@ -23,7 +23,7 @@ def do_login():
         r.raise_for_status()
     except requests.HTTPError as e:
         if e.response.status_code == 401:
-            return redirect(url_for('get_login', error="bad username or password"))
+            return redirect(url_for('get_login', error="bad_login"))
     session["username"] = request.form["username"]
     session["fakeauth"] = r.content
     return redirect(url_for('get_apps'))
