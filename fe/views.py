@@ -5,7 +5,9 @@ __all__ = [
 
 from flask import render_template, request, redirect, url_for, abort
 from flask import session, current_app
+from flask import Response
 import requests
+import json
 
 
 def get_login():
@@ -48,9 +50,14 @@ def get_apps():
     except requests.HTTPError as e:
         if e.response.status_code == 401:
             return redirect(url_for('do_logout'))
-    return render_template(
-        'index.html',
-        apps=apps, username=session["username"])
+    etag = str(hash(json.dumps(apps, sort_keys=True)))
+    headers = {'ETag': etag}
+    if request.headers.get('If-None-Match', None) == etag:
+        return Response(None, 304, headers=headers)
+    else:
+        return Response(render_template(
+                        'index.html', apps=apps,
+                        username=session["username"]), headers=headers)
 
 
 def do_deploy():
