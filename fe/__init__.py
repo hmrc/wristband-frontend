@@ -1,5 +1,4 @@
 from flask import Flask
-#from flask.ext.socketio import SocketIO
 from . import views
 
 
@@ -15,8 +14,5 @@ def create_app(config_object=None):
     app.add_url_rule('/login', view_func=views.do_login, methods=['POST'])
     app.add_url_rule('/logout', view_func=views.do_logout, methods=['GET'])
     app.add_url_rule('/deploy', view_func=views.do_deploy, methods=['POST'])
-
-    #socketio = SocketIO()
-    #socketio.init_app(app)
 
     return app
