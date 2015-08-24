@@ -27,7 +27,7 @@ for (var i = 0, len = appNames.length; i < len; i++) {
       },
       {
         "name": "staging",
-        "version": asVersion(number - Math.ceil(Math.random() * 10))
+        "version": asVersion(number - Math.floor(Math.random() * 3))
       }
     ]
   };

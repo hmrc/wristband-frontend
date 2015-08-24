@@ -22,19 +22,7 @@
 
   <script src="/static/js/lib/jquery.js"></script>
   <script src="/static/js/lib/dataTables.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 
-  <!-- deploy-button-behaviour: defines how the deploy button should act -->
-  <script src="/static/js/deploy-button-behaviour.js"></script>
-
-  <!-- filter-app-table-by-name: defines the behaviour for searching the apps table -->
-  <script src="/static/js/filter-app-table-by-name.js"></script>
-
-  <!-- script: any other scripts that benefit the app -->
-  <script src="/static/js/script.js"></script>
-
-  <!-- events: the socket.io frontend events, to accompany events.py -->
-  <script src="/static/js/events.js"></script>
-
+  <script src="/static/js/lib/require.js" data-main="/static/js/script"></script>
 </body>
 </html>
