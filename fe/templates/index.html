@@ -36,7 +36,12 @@
     {% for app in apps %}
       <tr{% if "jobid" in app.stages.staging %} class="deploying"{% endif %}>
         <td class="app left aligned">
-          <h2 class="ui header">{{ app.name }}</h2>
+          <h2 class="ui header">
+            {% if app.stages.qa.version != app.stages.staging.version %}
+              <span class="ui teal horizontal label new">new</span>
+            {% endif %}
+            {{ app.name }}
+          </h2>
         </td>
         <td class="stage">
           <span class="mobile-only">QA </span><span class="ui label large">{{ app.stages.qa.version }}</span>
@@ -61,6 +66,10 @@
               </button>
               <button class="ui button loading teal"></button>
             </div>
+
+          {% else %}
+
+            <button class="ui button basic disabled" disabled="disabled">Deployed</button>
 
           {% endif %}
         </td>
