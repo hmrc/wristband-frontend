@@ -1,9 +1,12 @@
 __all__ = [
-    "get_apps"
-    "do_deploy"
+    "get_login",
+    "do_login",
+    "do_logout",
+    "get_apps",
+    "do_deploy",
 ]
 
-from flask import render_template, request, redirect, url_for, abort
+from flask import render_template, request, redirect, url_for
 from flask import session, current_app
 from flask import Response
 import requests
@@ -11,7 +14,7 @@ import json
 
 
 def get_login():
-    error=request.args.get('error', None)
+    error = request.args.get('error', None)
     return render_template('login.html', error=error)
 
 
@@ -30,6 +33,7 @@ def do_login():
     session["username"] = request.form["username"]
     session["fakeauth"] = r.content
     return redirect(url_for('get_apps'))
+
 
 def do_logout():
     session.clear()
@@ -68,7 +72,9 @@ def do_deploy():
     fake_auth_header = session.get("fakeauth", None)
     headers = {"fakeauth": fake_auth_header} if fake_auth_header else {}
 
-    r = requests.put("{}apps/{}/stages/{}/version/{}".format(current_app.config["API_URI"], app, stage, version), headers=headers)
+    r = requests.put(
+        "{}apps/{}/stages/{}/version/{}".format(current_app.config["API_URI"], app, stage, version),
+        headers=headers)
     r.raise_for_status()
 
     return redirect(url_for('get_apps'))
