@@ -1,6 +1,6 @@
 module.exports = {
   "qa": {
-      "name": "qa"
+    "name": "qa"
   },
   "staging": {
     "name": "staging"
