@@ -1,7 +1,7 @@
 wristband-frontend
 ==================
 
-A sfrontend client for the Wristband deployment service. Communicates directly with, and is dependent on [Wristband REST API](https://github.com/hmrc/wristband).
+A frontend client for the Wristband deployment service. Communicates directly with, and is dependent on [Wristband REST API](https://github.com/hmrc/wristband).
 
 README contents:
 
@@ -14,12 +14,16 @@ README contents:
 Installation
 ------------
 
+*n.b. You also need to have the `wristband` API running locally to run the frontend. See the [Wristband API installation instructions here](https://github.com/hmrc/wristband) *
+
 - `$ git clone http://example.com/HMRC/wristband-frontend.git`
 - `$ cd wristband-frontend`
 - `$ pip install -r requirements.txt`
 - `$ python wsgi.py`
 
 The app will now be running: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+
+If you've followed the API docs, it should also be running: [http://127.0.0.1:8000/api/](http://127.0.0.1:8000/api/)
 
 Mock
 ----
@@ -29,6 +33,8 @@ The app has a mock API that can be used when running locally. To start the mock:
 - `$ cd mock`
 - `$ npm install`
 - `$ npm start`
+
+The mock communicates with the API to get the app data, and currently mostly just mocks the deployments.
 
 Tests
 -----

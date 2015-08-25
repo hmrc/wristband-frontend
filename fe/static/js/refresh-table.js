@@ -6,7 +6,7 @@ define(['filter-app-table-by-name'], function (filter_app_table_by_name) {
 
       setInterval(function () {
         $.ajax({
-          url: 'http://localhost:5000',
+          url: 'http://localhost:5000/',
           success: function (data) {
             if (data) {
               var $table = $('table');

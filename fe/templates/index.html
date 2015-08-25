@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+<noscript>
+  <!-- edgecase: when JS is disabled we want to provide some level of refresh -->
+  <meta http-equiv="refresh" content="10">
+</noscript>
+
+{% endblock %}
+
 {% block body %}
 
 <div class="ui secondary pointing menu">
@@ -15,9 +24,9 @@
 
 <form class="search ui form js-show">
   <div class="field">
-    <div class="ui left icon input huge">
-      <i class="search icon teal"></i>
+    <div class="ui icon input huge">
       <input type="text" placeholder="Search...">
+      <i class="search icon teal"></i>
     </div>
   </div>
   <div class="ui submit button hidden">Submit</div>
@@ -37,44 +46,52 @@
       <tr{% if "jobid" in app.stages.staging %} class="deploying"{% endif %}>
         <td class="app left aligned">
           <h2 class="ui header">
-            {% if app.stages.qa.version != app.stages.staging.version %}
+            {% if ("qa" in app.stages) and (("staging" not in app.stages) or ("staging" in app.stages and (app.stages.qa.version != app.stages.staging.version))) %}
               <span class="ui teal horizontal label new">new</span>
             {% endif %}
             {{ app.name }}
           </h2>
         </td>
         <td class="stage">
-          <span class="mobile-only">QA </span><span class="ui label large">{{ app.stages.qa.version }}</span>
+          {% if "qa" in app.stages %}
+            <span class="mobile-only">QA </span><span class="ui label large">{{ app.stages.qa.version }}</span>
+          {% endif %}
         </td>
         <td class="deploy">
-          {% if app.stages.qa.version != app.stages.staging.version %}
+          {% if "qa" in app.stages %}
 
-            <form action="/deploy" method="post"{% if "jobid" in app.stages.staging %} style="display: none;"{% endif %}>
-              <input type="hidden" name="app" value="{{ app.name }}">
-              <input type="hidden" name="version" value="{{ app.stages.qa.version }}">
-              <input type="hidden" name="stage" value="staging">
-              <button class="ui basic teal right labeled icon button">
-                <i class="right arrow icon large-only"></i>
-                <i class="down arrow icon mobile-only"></i>
-                <span class="text">Deploy</span>
-              </button>
-            </form>
+            {% if ("staging" not in app.stages) or ("staging" in app.stages and (app.stages.qa.version != app.stages.staging.version)) %}
 
-            <div class="ui buttons"{% if "jobid" not in app.stages.staging %} style="display: none;"{% endif %}>
-              <button class="ui teal right icon button">
-                <span class="text">{{ app.stages.qa.version }} <i class="right arrow icon large-only"></i><i class="down arrow icon mobile-only"></i></span>
-              </button>
-              <button class="ui button loading teal"></button>
-            </div>
+              <form action="/deploy" method="post"{% if "jobid" in app.stages.staging %} style="display: none;"{% endif %}>
+                <input type="hidden" name="app" value="{{ app.name }}">
+                <input type="hidden" name="version" value="{{ app.stages.qa.version }}">
+                <input type="hidden" name="stage" value="staging">
+                <button class="ui basic teal right labeled icon button">
+                  <i class="right arrow icon large-only"></i>
+                  <i class="down arrow icon mobile-only"></i>
+                  <span class="text">Deploy</span>
+                </button>
+              </form>
 
-          {% else %}
+              <div class="ui buttons"{% if "jobid" not in app.stages.staging %} style="display: none;"{% endif %}>
+                <button class="ui teal right icon button" tabindex="-1">
+                  <span class="text">{{ app.stages.qa.version }} <i class="right arrow icon large-only"></i><i class="down arrow icon mobile-only"></i></span>
+                </button>
+                <button class="ui button loading teal" tabindex="-1"></button>
+              </div>
 
-            <button class="ui button basic disabled" disabled="disabled">Deployed</button>
+            {% else %}
+
+              <button class="ui button basic disabled" disabled="disabled">Deployed</button>
+
+            {% endif %}
 
           {% endif %}
         </td>
         <td class="stage">
-          <span class="mobile-only">Staging </span><span class="ui label large">{{ app.stages.staging.version }}</span>
+          {% if "staging" in app.stages %}
+            <span class="mobile-only">Staging </span><span class="ui label large">{{ app.stages.staging.version }}</span>
+          {% endif %}
         </td>
       </tr>
     {% endfor %}
