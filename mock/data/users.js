@@ -1,5 +1,6 @@
 var users = [
-  'wristband'
+  'wristband',
+  'john.norris'
 ];
 
 module.exports = users;

@@ -32,6 +32,16 @@ define(function () {
 
     var keyupTimeout;
 
+    $('.search.form').off('submit.filter').on('submit.filter', function (e) {
+      e.preventDefault();
+    });
+
+    $('body').off('keydown.filter').on('keydown.filter', function (e) {
+      if (e.which > keys.ZERO) {
+        $('.search.form input').focus();
+      }
+    });
+
     $('.search.form input').off('keyup.filter').on('keyup.filter', function (e) {
       clearTimeout(keyupTimeout);
 

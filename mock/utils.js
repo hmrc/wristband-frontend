@@ -16,8 +16,17 @@ function id() {
   return Math.ceil(Math.random() * 1000000) + '';
 }
 
+function find(arr, propName, propValue) {
+  for (var i=0; i < arr.length; i++) {
+    if (arr[i][propName] == propValue) {
+      return arr[i];
+    }
+  }
+}
+
 module.exports = {
   asArray: asArray,
   contains: contains,
-  id: id
+  id: id,
+  find: find
 };

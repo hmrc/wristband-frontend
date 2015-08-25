@@ -1,4 +1,4 @@
-  var auth_header = 'fakeauth';
+var auth_header = 'fakeauth';
 
 // data
 var apps = require('./data/apps');
@@ -33,7 +33,7 @@ module.exports = function (app) {
   });
 
   app.get('/apps', function(req, res) {
-    res.json(utils.asArray(apps));
+    res.json(apps.get());
   });
 
   app.get('/apps/:name', function(req, res) {
@@ -49,10 +49,18 @@ module.exports = function (app) {
   });
 
   app.put('/apps/:app/stages/:stage/version/:version', function(req, res) {
-    var app = apps[req.params.app];
-    var stage = app.stages[app.stages.map(function (stage) { return stage.name }).indexOf(req.params.stage)];
-
+    var app = utils.find(apps.get(), 'name', req.params.app);
+    var stage = utils.find(app.stages, 'name', req.params.stage);
     var id = utils.id();
+
+    if (!stage) {
+      app.stages.push({
+        'name': req.params.stage,
+        'version': '...'
+      });
+
+      stage = utils.find(app.stages, 'name', req.params.stage);
+    }
 
     stage.jobid = id;
 
