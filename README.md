@@ -6,9 +6,10 @@ A sfrontend client for the Wristband deployment service. Communicates directly w
 README contents:
 
 - [Installation](#installation)
+- [Mock](#mock)
+- [Tests](#tests)
 - [Stack](#stack)
 - [Routing](#routing)
-- [Events (socket.io)](#events-socket-io-)
 
 Installation
 ------------
