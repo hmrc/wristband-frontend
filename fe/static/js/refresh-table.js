@@ -6,7 +6,7 @@ define(['filter-app-table-by-name'], function (filter_app_table_by_name) {
 
       setInterval(function () {
         $.ajax({
-          url: 'http://localhost:5000/',
+          url: window.location.href,
           success: function (data) {
             if (data) {
               var $table = $('table');
@@ -19,9 +19,7 @@ define(['filter-app-table-by-name'], function (filter_app_table_by_name) {
           error: config.error || function () {
             // if there's an error, you're probably not logged in, so reload
             window.location.reload();
-          },
-          // this is imperative for the etag to work (in Chrome)
-          ifModified: true
+          }
         });
       }, config.seconds * 1000);
     }
