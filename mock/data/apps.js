@@ -13,12 +13,12 @@ var asVersion = function (number) {
 
 var number;
 
-var apps = {};
+var apps = [];
 
 for (var i = 0, len = appNames.length; i < len; i++) {
   number = randomNumber();
 
-  apps[appNames[i]] = {
+  apps.push({
     "name": appNames[i],
     "stages": [
       {
@@ -30,7 +30,11 @@ for (var i = 0, len = appNames.length; i < len; i++) {
         "version": asVersion(number - Math.floor(Math.random() * 3))
       }
     ]
-  };
+  });
 }
 
-module.exports = apps;
+module.exports = {
+  get: function () {
+    return apps;
+  }
+};
