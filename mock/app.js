@@ -6,8 +6,11 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
-
+var cookieParser = require('cookie-parser');
+ 
 var app = express();
+app.use(cookieParser());
+
 
 // all environments
 app.set('port', process.env.PORT || 3000);

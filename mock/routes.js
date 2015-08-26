@@ -19,12 +19,13 @@ module.exports = function (app) {
 
     var id = utils.id();
     uuids.push(id);
+    res.cookie('fakeauth', id);
     res.send(200, id);
   });
 
   // authenticate all other requests
   app.all('*', function (req, res, next) {
-    if (!utils.contains(uuids, req.headers[auth_header])) {
+    if (!utils.contains(uuids, req.cookies[auth_header])) {
       return res.send(401);
     }
 
