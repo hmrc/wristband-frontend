@@ -1,20 +1,36 @@
-var request = require('request');
+var appNames = ['assets-frontend', 'hmrc.github.io', 'jenkins-jobs', 'releaser', 'help-frontend', 'wristband-frontend', 'wristband', 'mongo-caching', 'play-ReactiveMongo', 'reactivemongo-test', 'simple-reactivemongo', 'reactivemongo-json', 'pertax-integration', 'time', 'nginx-buildpack', 'domain', 'emailaddress', 'http-verbs', 'play-ui', 'stream-processor', 'service-manager', 'play-events', 'batch-updater', 'sbt-distributables', 'govuk-template', 'frontend-bootstrap', 'crypto', 'play-graphite', 'play-config', 'secure', 'play-filters', 'mongo-lock', 'accessibility-driver', 'hmrc-screens', 'play-authorisation', 'accessibility-developer-tools', 'attachments-client', 'captain', 'sbt-templates', 'sbt-git-stamp', 'sbt-bobby', 'play-breadcrumb', 'jenkins-job-builders', 'play-health', 'play-scheduling', 'microservice-bootstrap', 'kickstarters', 'sbt-auto-build', 'play-partials', 'http-exceptions', 'order-id-encoder', 'hmrctest', 'car-tax-calculator', 'tabular-data-validator', 'url-builder', 'a-b-test', 'worldpay-report-generator', 'bobby-open-config', 'reference-checker', 'sbt-git-versioning', 'sbt-utils', 'git-stamp', 'play-json-logger', 'sbt-bintray-publish', 'sbt-auto-code-review', 'release', 'tax-credits-service-alpha-prototype', 'website', 'hmflow', 'karma-jasmine-jquery', 'jekyll-grid', 'sbt-docker', 'slugrunner', 'open-source-guidelines', 'puppetlabs-apt', 'akka-rabbitmq', 'puppet-clamav'];
 
-var apps = [];
+appNames.sort();
 
-request('http://localhost:8000/api/apps/', function (error, response, body) {
-  if (!error && response.statusCode == 200) {
-    apps = JSON.parse(body);
-
-    apps.sort(function (a, b) {
-      var alc = a.name.toLowerCase(), blc = b.name.toLowerCase();
-      return alc > blc ? 1 : alc < blc ? -1 : 0;
-    });
-  }
-});
-
-module.exports = {
-  get: function () {
-    return apps;
-  }
+var randomNumber = function () {
+  return 110 + (Math.ceil(Math.random() * 100));
 };
+
+var asVersion = function (number) {
+  number = (number + '').substring(0, 3);
+  return number[0] + '.' + number[1] + '.' + number[2];
+};
+
+var number;
+
+var apps = {};
+
+for (var i = 0, len = appNames.length; i < len; i++) {
+  number = randomNumber();
+
+  apps[appNames[i]] = {
+    "name": appNames[i],
+    "stages": [
+      {
+        "name": "qa",
+        "version": asVersion(number)
+      },
+      {
+        "name": "staging",
+        "version": asVersion(number - Math.floor(Math.random() * 3))
+      }
+    ]
+  };
+}
+
+module.exports = apps;
