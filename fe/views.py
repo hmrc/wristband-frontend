@@ -7,31 +7,27 @@ __all__ = [
 ]
 
 from flask import render_template, request, redirect, url_for
-from flask import session, current_app
+from flask import session, g
 from flask import Response
-import requests
+from wb_api import WBAPIUnauthorizedError
 import json
 
 
 def get_login():
+    if "api_cookies" in session:
+        return redirect(url_for('get_apps'))
     error = request.args.get('error', None)
     return render_template('login.html', error=error)
 
 
 def do_login():
-    # POST to the API/login with the username and password for validation
-    # expect back an access token to be stored in a session for use in future API calls
-    if "fakeauth" in session:
-        return redirect(url_for('get_apps'))
     session.clear()
-    r = requests.post("{}login/".format(current_app.config["API_URI"]), request.form)
     try:
-        r.raise_for_status()
-    except requests.HTTPError as e:
-        if e.response.status_code == 401:
-            return redirect(url_for('get_login', error="bad_login"))
+        g.wb_api.login(**request.form)
+    except WBAPIUnauthorizedError:
+        return redirect(url_for('get_login', error="bad_login"))
     session["username"] = request.form["username"]
-    session["fakeauth"] = r.content
+    session["api_cookies"] = g.wb_api.get_session_cookies()
     return redirect(url_for('get_apps'))
 
 
@@ -41,20 +37,12 @@ def do_logout():
 
 
 def get_apps():
-    fake_auth_header = session.get("fakeauth", None)
-    headers = {"fakeauth": fake_auth_header} if fake_auth_header else {}
     try:
-        r = requests.get("{}apps/".format(current_app.config["API_URI"]), headers=headers)
-        r.raise_for_status()
-        apps = r.json()
-        apps = [
-            dict(a.items() + {"stages": {s["name"]: s for s in a["stages"]}}.items())
-            for a in apps
-        ]
-    except requests.HTTPError as e:
-        if e.response.status_code == 401:
-            return redirect(url_for('do_logout'))
-    etag = str(hash(json.dumps(apps, sort_keys=True)))
+        apps = g.wb_api.get_apps()
+    except WBAPIUnauthorizedError:
+        return redirect(url_for('do_logout'))
+
+    etag = '"{}"'.format(hash(json.dumps(sorted(apps, key=lambda a: a["name"]), sort_keys=True)))
     headers = {'ETag': etag}
     if request.headers.get('If-None-Match', None) == etag:
         return Response(None, 304, headers=headers)
@@ -69,12 +57,9 @@ def do_deploy():
     stage = request.form["stage"]
     version = request.form["version"]
 
-    fake_auth_header = session.get("fakeauth", None)
-    headers = {"fakeauth": fake_auth_header} if fake_auth_header else {}
-
-    r = requests.put(
-        "{}apps/{}/stages/{}/version/{}".format(current_app.config["API_URI"], app, stage, version),
-        headers=headers)
-    r.raise_for_status()
+    try:
+        g.wb_api.deploy_app(app, stage, version)
+    except WBAPIUnauthorizedError:
+        return redirect(url_for('do_logout'))
 
     return redirect(url_for('get_apps'))
