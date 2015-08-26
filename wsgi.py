@@ -8,3 +8,5 @@ if __name__ == '__main__':
     app.run(debug=True)
 else:
     app = create_app('config.production')
+    app.debug = True
+    app.secret_key = "thing"
