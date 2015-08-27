@@ -49,7 +49,7 @@ def get_apps():
     else:
         return Response(render_template(
                         'index.html', apps=apps,
-                        username=session["username"]), headers=headers)
+                        username=session.get("username", "anonymous")), headers=headers)
 
 
 def do_deploy():
