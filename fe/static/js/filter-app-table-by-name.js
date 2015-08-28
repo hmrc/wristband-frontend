@@ -16,7 +16,7 @@ define(function () {
 
   function lookup() {
     // perform the DataTable lookup based on the input value
-    resultsTable.search($('.search.form input').val() || '').draw();
+    resultsTable.column(0).search($('.search.form input').val() || '').draw();
   }
 
   var init = function () {
