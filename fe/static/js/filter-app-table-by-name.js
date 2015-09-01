@@ -43,7 +43,6 @@ define(function () {
     });
 
     $('.search.form input').off('keyup.filter').on('keyup.filter', function (e) {
-      clearTimeout(keyupTimeout);
 
       /*
         if the user hasn't entered a 'valuable' key, such as a number, letter,
@@ -52,6 +51,8 @@ define(function () {
           hit in an attempt to search
       */
       if (!(e.which > keys.ZERO || e.which === keys.BACKSPACE)) return false;
+
+      clearTimeout(keyupTimeout);
 
       // cache DOM requests
       var $this = $(this);
