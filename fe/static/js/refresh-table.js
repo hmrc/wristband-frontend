@@ -9,9 +9,9 @@ define(['filter-app-table-by-name'], function (filter_app_table_by_name) {
           url: window.location.href,
           success: function (data) {
             if (data) {
-              var $table = $('table');
-              $table.after($(data).find('table'));
-              $table.remove();
+              var $table = $('#app-table');
+
+              $table.replaceWith($(data).find('#app-table'));
 
               filter_app_table_by_name.init();
             }
