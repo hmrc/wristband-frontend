@@ -11,6 +11,9 @@ var utils = require('./utils');
 var uuids = [];
 
 module.exports = function (app) {
+  app.all('/bad/*', function (req, res, next) {
+    return res.send(500, {"message": "a non-offensive message"});
+  });
 
   app.post('/login', function (req, res) {
     if (!utils.contains(users, req.body.username)) {
