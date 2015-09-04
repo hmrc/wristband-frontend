@@ -1,4 +1,4 @@
-from wb_api import WBAPIUnauthorizedError, WBAPI
+from wb_api import WBAPIUnauthorizedError, WBAPI, WBAPIHTTPError
 from mock import patch
 from unittest import TestCase
 import requests
@@ -11,7 +11,7 @@ class TestWBAPICase(TestCase):
         self._wb = WBAPI(self._api_uri)
         self._requests_session = requests_session_mock()
 
-    def test_bad_login_raises_exception(self):
+    def test_bad_login_raises_WBAPIUnauthorizedError_exception(self):
         class BadResponse(object):
             status_code = 401
 
@@ -29,6 +29,28 @@ class TestWBAPICase(TestCase):
             requests.HTTPError(response=BadResponse())
         with self.assertRaises(WBAPIUnauthorizedError):
             self._wb.deploy_app("test-app", "test-stage", "test-version")
+
+    def test_HTTPError_re_raises(self):
+        class BadResponse(object):
+            status_code = 501
+
+        self._requests_session.post.return_value.raise_for_status.side_effect = \
+            requests.HTTPError(response=BadResponse())
+        with self.assertRaises(WBAPIHTTPError) as exception_context:
+            self._wb.login("test_user", "test_password")
+        self.assertEquals(exception_context.exception.response.status_code, 501)
+
+        self._requests_session.get.return_value.raise_for_status.side_effect = \
+            requests.HTTPError(response=BadResponse())
+        with self.assertRaises(WBAPIHTTPError):
+            self._wb.get_apps()
+        self.assertEquals(exception_context.exception.response.status_code, 501)
+
+        self._requests_session.put.return_value.raise_for_status.side_effect = \
+            requests.HTTPError(response=BadResponse())
+        with self.assertRaises(WBAPIHTTPError):
+            self._wb.deploy_app("test-app", "test-stage", "test-version")
+        self.assertEquals(exception_context.exception.response.status_code, 501)
 
     def test_apps_checks_bad_status(self):
         self._wb.get_apps()

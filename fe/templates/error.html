@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+  <div class="ui error message">
+    <h1><p>An error has occured:</p><p>{{ error.status }} : {{ error.msg }}</p></h1>
+  </div>
+
+{% endblock %}

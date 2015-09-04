@@ -4,6 +4,7 @@ __all__ = [
     "do_logout",
     "get_apps",
     "do_deploy",
+    "error_handler",
 ]
 
 from flask import render_template, request, redirect, url_for
@@ -63,3 +64,12 @@ def do_deploy():
         return redirect(url_for('do_logout'))
 
     return redirect(url_for('get_apps'))
+
+
+def error_handler(e):
+    error = {"status": e.response.status_code}
+    try:
+        error["msg"] = e.response.json()["message"]
+    except:
+        error["msg"] = e.response.text
+    return render_template('error.html', error=error), e.response.status_code
