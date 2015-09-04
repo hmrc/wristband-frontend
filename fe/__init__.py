@@ -1,6 +1,6 @@
 from flask import Flask, g, current_app, session
 from . import views
-from wb_api import WBAPI
+from wb_api import WBAPI, WBAPIHTTPError
 
 
 def get_api_before_request():
@@ -23,6 +23,7 @@ def create_app(config_object=None):
     app.add_url_rule('/login', view_func=views.do_login, methods=['POST'])
     app.add_url_rule('/logout', view_func=views.do_logout, methods=['GET'])
     app.add_url_rule('/deploy', view_func=views.do_deploy, methods=['POST'])
+    app.register_error_handler(WBAPIHTTPError, views.error_handler)
     app.before_request(get_api_before_request)
 
     return app
