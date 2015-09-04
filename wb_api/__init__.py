@@ -4,20 +4,25 @@ __all__ = [
 ]
 
 import requests
+from requests.exceptions import HTTPError as WBAPIHTTPError
 from urlparse import urljoin
 from functools import wraps
 
 
-class WBAPIUnauthorizedError(Exception):
+class WBAPIError(Exception):
     pass
 
 
-def catch_auth_exception(f):
+class WBAPIUnauthorizedError(WBAPIError):
+    pass
+
+
+def catch_api_http_exception(f):
     @wraps(f)
     def wrapper(*args, **kwds):
         try:
             r = f(*args, **kwds)
-        except requests.exceptions.HTTPError as e:
+        except WBAPIHTTPError as e:
             if e.response.status_code == 401:
                 raise WBAPIUnauthorizedError()
             else:
@@ -37,7 +42,7 @@ class WBAPI(object):
     def get_session_cookies(self):
         return self.__session.cookies.get_dict()
 
-    @catch_auth_exception
+    @catch_api_http_exception
     def login(self, username, password):
         session = self.__session
 
@@ -46,7 +51,7 @@ class WBAPI(object):
             {"username": username, "password": password})
         r.raise_for_status()
 
-    @catch_auth_exception
+    @catch_api_http_exception
     def get_apps(self):
         r = self.__session.get(urljoin(self.__base_uri, "apps/"))
         r.raise_for_status()
@@ -56,7 +61,7 @@ class WBAPI(object):
             for a in apps
         ]
 
-    @catch_auth_exception
+    @catch_api_http_exception
     def deploy_app(self, app, stage, version):
         r = self.__session.put(
             urljoin(self.__base_uri, "apps/{}/stages/{}/version/{}".format(app, stage, version)))
