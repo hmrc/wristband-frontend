@@ -9,11 +9,7 @@ from urlparse import urljoin
 from functools import wraps
 
 
-class WBAPIError(Exception):
-    pass
-
-
-class WBAPIUnauthorizedError(WBAPIError):
+class WBAPIUnauthorizedError(WBAPIHTTPError):
     pass
 
 
@@ -24,7 +20,7 @@ def catch_api_http_exception(f):
             r = f(*args, **kwds)
         except WBAPIHTTPError as e:
             if e.response.status_code == 401:
-                raise WBAPIUnauthorizedError()
+                raise WBAPIUnauthorizedError(response=e.response)
             else:
                 raise
         return r
