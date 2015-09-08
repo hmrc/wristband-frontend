@@ -18,15 +18,16 @@ def get_login():
     if "api_cookies" in session:
         return redirect(url_for('get_apps'))
     error = request.args.get('error', None)
-    return render_template('login.html', error=error)
+    error_message = request.args.get('error_msg', None)
+    return render_template('login.html', error=error, error_message=error_message)
 
 
 def do_login():
     session.clear()
     try:
         g.wb_api.login(**request.form)
-    except WBAPIUnauthorizedError:
-        return redirect(url_for('get_login', error="bad_login"))
+    except WBAPIUnauthorizedError as e:
+        return redirect(url_for('get_login', error="bad_login", error_msg=e.response.json()["message"]))
     session["username"] = request.form["username"]
     session["api_cookies"] = g.wb_api.get_session_cookies()
     return redirect(url_for('get_apps'))
