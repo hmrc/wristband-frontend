@@ -42,10 +42,12 @@ class TestFECase(TestCase):
     def test_post_login_with_bad_user_redirects_back_to_login(self, wbapi_mock):
         """ POST /login with bad login redirects to /login?error=bad_login, clears session cookies
         """
-        wbapi_mock.return_value.login.side_effect = WBAPIUnauthorizedError
+        bad_response_mock = MagicMock()
+        bad_response_mock.json.return_value = {"message": "this is a test error"}
+        wbapi_mock.return_value.login.side_effect = WBAPIUnauthorizedError(response=bad_response_mock)
         r = self.client.post('/login', data=dict(username="test_user", password="test_pass"))
         self.assertEquals(r.status_code, 302)
-        self.assertEquals(r.location, "http://localhost/login?error=bad_login")
+        self.assertEquals(r.location, "http://localhost/login?error_msg=this+is+a+test+error&error=bad_login")
         with self.client.session_transaction() as sess:
             self.assertFalse(sess)
 

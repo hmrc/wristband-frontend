@@ -17,7 +17,7 @@ module.exports = function (app) {
 
   app.post('/login', function (req, res) {
     if (!utils.contains(users, req.body.username)) {
-      return res.send(401);
+      return res.send(401, {"message": "bad username message from backend"});
     }
 
     var id = utils.id();
