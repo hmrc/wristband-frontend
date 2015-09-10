@@ -23,6 +23,7 @@ def create_app(config_object=None):
     app.add_url_rule('/login', view_func=views.do_login, methods=['POST'])
     app.add_url_rule('/logout', view_func=views.do_logout, methods=['GET'])
     app.add_url_rule('/deploy', view_func=views.do_deploy, methods=['POST'])
+    app.add_url_rule('/ping/ping', view_func=views.healthcheck, methods=['GET'])
     app.register_error_handler(WBAPIHTTPError, views.wb_error_handler)
     app.register_error_handler(Exception, views.generic_error_handler)
     app.before_request(get_api_before_request)
