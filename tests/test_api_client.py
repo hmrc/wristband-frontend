@@ -59,7 +59,7 @@ class TestWBAPICase(TestCase):
     def test_apps_hits_api(self):
         self._wb.get_apps()
         self._requests_session.get.assert_called_with("{}apps/".format(self._api_uri),
-        timeout=(5, 30))
+                                                      timeout=(5, 30))
 
     @patch('wb_api.requests.Session')
     def test_timeout_is_configurable(self, requests_session_mock):
@@ -67,7 +67,7 @@ class TestWBAPICase(TestCase):
         requests_session = requests_session_mock()
         _wb.get_apps()
         requests_session.get.assert_called_with("{}apps/".format(self._api_uri),
-            timeout=(1, 2))
+                                                timeout=(1, 2))
 
     def test_apps_transform(self):
         self._requests_session.get.return_value.json.return_value = [
