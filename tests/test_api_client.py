@@ -58,7 +58,16 @@ class TestWBAPICase(TestCase):
 
     def test_apps_hits_api(self):
         self._wb.get_apps()
-        self._requests_session.get.assert_called_with("{}apps/".format(self._api_uri))
+        self._requests_session.get.assert_called_with("{}apps/".format(self._api_uri),
+                                                      timeout=(5, 30))
+
+    @patch('wb_api.requests.Session')
+    def test_timeout_is_configurable(self, requests_session_mock):
+        _wb = WBAPI(self._api_uri, connect_timeout=1, read_timeout=2)
+        requests_session = requests_session_mock()
+        _wb.get_apps()
+        requests_session.get.assert_called_with("{}apps/".format(self._api_uri),
+                                                timeout=(1, 2))
 
     def test_apps_transform(self):
         self._requests_session.get.return_value.json.return_value = [
@@ -116,7 +125,8 @@ class TestWBAPICase(TestCase):
     def test_deploy_app_hits_api(self):
         self._wb.deploy_app("app-1", "staging", "1.2.3")
         self._requests_session.put.assert_called_with(
-            "{}apps/app-1/stages/staging/version/1.2.3".format(self._api_uri))
+            "{}apps/app-1/stages/staging/version/1.2.3".format(self._api_uri),
+            timeout=(5, 30))
 
     def test_get_session_cookies_returns_cookies(self):
         cookies = {"cookie1": "junk"}
