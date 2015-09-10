@@ -12,6 +12,10 @@ class TestFECase(TestCase):
         self.client = self.app.test_client()
         self.wbapi_mock = wbapi_mock
 
+    def test_healthcheck(self):
+        r = self.client.get('/ping/ping')
+        self.assertEquals(r.status_code, 200)
+
     #  Not sure why I need to do this after it's done in setUp??
     @patch('fe.WBAPI')
     def test_post_login_stores_api_cookies_and_username_in_session(self, wbapi_mock):
