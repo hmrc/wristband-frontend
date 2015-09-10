@@ -88,3 +88,7 @@ def wb_error_handler(e):
         error["msg"] = e.response.text
 
     return render_template('error.html', error=error), status_code
+
+
+def healthcheck():
+    return ('', 200)
