@@ -12,8 +12,15 @@ var uuids = [];
 
 module.exports = function (app) {
   app.all('/bad/*', function (req, res, next) {
-    return res.send(500, {"details": "a non-offensive message"});
+    return res.send(502, {"details": "a non-offensive message"});
   });
+
+  app.all('/bad_and_slow/*', function (req, res, next) {
+    setInterval(function() {
+      res.send(500, {"details": "a non-offensive message"});
+    },5000);
+  });
+
 
   app.post('/login', function (req, res) {
     if (!utils.contains(users, req.body.username)) {
