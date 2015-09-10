@@ -1,9 +1,19 @@
 {% extends "base.html" %}
 
+{% block page %}error{% endblock %}
+
 {% block body %}
 
-  <div class="ui error message">
-    <h1><p>An error has occured:</p><p>{{ error.status }} : {{ error.msg }}</p></h1>
-  </div>
+<i class="warning circle icon"></i>
+
+<h1>
+  {{ error.status }}
+</h1>
+
+<h2>Well this is awkward&hellip;</h2>
+
+<p>
+  {{ error.msg }}
+</p>
 
 {% endblock %}
