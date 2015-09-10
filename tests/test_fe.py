@@ -169,8 +169,8 @@ class TestFECase(TestCase):
         wbapi_mock().deploy_app.assert_called_with("test", "test", "test")
 
     @patch('fe.WBAPI')
-    def test_WBAPIHTTPError_exception_returns_error_page_with_error(self, wbapi_mock):
-        """ WBAPIHTTPERROR details are passed thru to client in error page
+    def test_WBAPIHTTPError_exception_returns_error_page_with_json_error(self, wbapi_mock):
+        """ WBAPIHTTPERROR json details are passed thru to client in error page
         """
         response_mock = MagicMock()
         response_mock.status_code = 500
@@ -179,3 +179,51 @@ class TestFECase(TestCase):
         r = self.client.get('/')
         self.assertEquals(r.status_code, response_mock.status_code)
         self.assertTrue(response_mock.json()["details"] in r.get_data())
+
+    @patch('fe.WBAPI')
+    def test_WBAPIHTTPError_exception_returns_error_page_with_non_json_error(self, wbapi_mock):
+        """ WBAPIHTTPERROR non-json details are passed thru to client in error page
+        """
+        response_mock = MagicMock()
+        response_mock.status_code = 500
+        response_mock.json.side_effect = KeyError
+        response_mock.text = "An Error Message"
+        wbapi_mock.return_value.get_apps.side_effect = WBAPIHTTPError(response=response_mock)
+        r = self.client.get('/')
+        self.assertEquals(r.status_code, response_mock.status_code)
+        print r.get_data()
+        self.assertTrue(response_mock.text in r.get_data())
+
+
+class TestFEExceptionCase(TestCase):
+
+    @patch('fe.views.wb_error_handler')
+    @patch('fe.views.generic_error_handler')
+    def setUp(self, gh_exception_mock, wb_exception_mock):
+        self.app = create_app('tests.config')
+        self.client = self.app.test_client()
+        self.gh_exception_mock = gh_exception_mock
+        self.wb_exception_mock = wb_exception_mock
+
+    @patch('fe.WBAPI')
+    def test_generic_exception_hits_catchall_exception_view(self, wbapi_mock):
+        """ Generic Exception results in generic error page
+        """
+        e = Exception("this is an expcetion")
+        wbapi_mock.return_value.get_apps.side_effect = e
+        self.client.get('/')
+        self.gh_exception_mock.assert_called_with(e)
+        self.assertFalse(self.wb_exception_mock.called)
+
+    @patch('fe.WBAPI')
+    def test_WB_exception_hits_WB_exception_view(self, wbapi_mock):
+        """ Wristband API Exception results in wristband API error page
+        """
+        response_mock = MagicMock()
+        response_mock.status_code = 500
+        response_mock.json.return_value = {"details": "An Error Message"}
+        e = WBAPIHTTPError(response=response_mock)
+        wbapi_mock.return_value.get_apps.side_effect = e
+        self.client.get('/')
+        self.wb_exception_mock.assert_called_with(e)
+        self.assertFalse(self.gh_exception_mock.called)
