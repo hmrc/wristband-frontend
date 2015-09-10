@@ -4,7 +4,8 @@ __all__ = [
     "do_logout",
     "get_apps",
     "do_deploy",
-    "error_handler",
+    "wb_error_handler",
+    "generic_error_handler",
 ]
 
 from flask import render_template, request, redirect, url_for
@@ -68,10 +69,22 @@ def do_deploy():
     return redirect(url_for('get_apps'))
 
 
-def error_handler(e):
-    error = {"status": e.response.status_code}
+def generic_error_handler(e):
+    error = {
+        "status": 502,
+        "msg": e.message
+    }
+
+    return render_template('error.html', error=error), 500
+
+
+def wb_error_handler(e):
+    status_code = e.response.status_code
+    error = {"status": status_code}
+
     try:
         error["msg"] = e.response.json()["details"]
-    except:
+    except KeyError:
         error["msg"] = e.response.text
-    return render_template('error.html', error=error), e.response.status_code
+
+    return render_template('error.html', error=error), status_code
