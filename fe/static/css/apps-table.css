@@ -41,6 +41,10 @@
   transition: none;
 }
 
+.ui.label.failed {
+  background: #ebb;
+}
+
 .ui.button.teal:hover, .ui.button.teal:focus {
   background: #00b5ad;
 }
