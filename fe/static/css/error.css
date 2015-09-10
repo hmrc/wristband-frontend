@@ -1,0 +1,32 @@
+body.error {
+  background: #1b1c1d;
+
+  color: #ddd;
+  text-align: center;
+}
+
+.error i.warning {
+  display: inline-block;
+
+  font-size: 10em;
+  line-height: 1em;
+
+  opacity: 0.1;
+}
+
+.error h1 {
+  margin-top: -0.5em;
+
+  font-size: 7em;
+}
+
+.error h2 {
+  margin: -1.5em 0 3em;
+  opacity: 0.1;
+}
+
+@media screen and (min-width: 768px) {
+  body.error {
+    font-size: 3vh;
+  }
+}

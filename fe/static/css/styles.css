@@ -3,6 +3,7 @@
 @import 'apps-table.css';
 @import 'search-form.css';
 @import 'menu.css';
+@import 'error.css';
 
 html, body, .container {
   height: 100%;
@@ -14,6 +15,7 @@ body {
 
 body > .ui.container {
   margin-top: 3em;
+  margin-bottom: 3em;
 }
 
 a {

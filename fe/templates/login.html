@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block page %}login{% endblock %}
+
 {% block body %}
 
 <form action="/login" method="post" class="ui login form vertical-align{% if error == 'bad_login' %} error{% endif %}">
