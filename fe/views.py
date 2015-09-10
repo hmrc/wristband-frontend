@@ -27,7 +27,8 @@ def do_login():
     try:
         g.wb_api.login(**request.form)
     except WBAPIUnauthorizedError as e:
-        return redirect(url_for('get_login', error="bad_login", error_msg=e.response.json()["details"]))
+        return redirect(url_for('get_login', error="bad_login",
+                                error_msg=e.response.json()["details"]))
     session["username"] = request.form["username"]
     session["api_cookies"] = g.wb_api.get_session_cookies()
     return redirect(url_for('get_apps'))
