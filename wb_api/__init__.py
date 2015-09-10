@@ -28,9 +28,10 @@ def catch_api_http_exception(f):
 
 
 class WBAPI(object):
-    def __init__(self, base_uri):
+    def __init__(self, base_uri, connect_timeout=5, read_timeout=30):
         self.__base_uri = base_uri
         self.__session = requests.Session()
+        self.__timeout = (connect_timeout, read_timeout)
 
     def set_session_cookies(self, cookies):
         self.__session.cookies.update(cookies)
@@ -44,12 +45,12 @@ class WBAPI(object):
 
         r = session.post(
             urljoin(self.__base_uri, "login/"),
-            {"username": username, "password": password})
+            {"username": username, "password": password}, timeout=self.__timeout)
         r.raise_for_status()
 
     @catch_api_http_exception
     def get_apps(self):
-        r = self.__session.get(urljoin(self.__base_uri, "apps/"))
+        r = self.__session.get(urljoin(self.__base_uri, "apps/"), timeout=self.__timeout)
         r.raise_for_status()
         apps = r.json()
         return [
@@ -60,5 +61,6 @@ class WBAPI(object):
     @catch_api_http_exception
     def deploy_app(self, app, stage, version):
         r = self.__session.put(
-            urljoin(self.__base_uri, "apps/{}/stages/{}/version/{}".format(app, stage, version)))
+            urljoin(self.__base_uri, "apps/{}/stages/{}/version/{}".format(app, stage, version)),
+            timeout=self.__timeout)
         r.raise_for_status()
