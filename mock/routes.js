@@ -12,12 +12,12 @@ var uuids = [];
 
 module.exports = function (app) {
   app.all('/bad/*', function (req, res, next) {
-    return res.send(500, {"message": "a non-offensive message"});
+    return res.send(500, {"details": "a non-offensive message"});
   });
 
   app.post('/login', function (req, res) {
     if (!utils.contains(users, req.body.username)) {
-      return res.send(401, {"message": "bad username message from backend"});
+      return res.send(401, {"details": "bad username message from backend"});
     }
 
     var id = utils.id();

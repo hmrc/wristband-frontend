@@ -43,7 +43,7 @@ class TestFECase(TestCase):
         """ POST /login with bad login redirects to /login?error=bad_login, clears session cookies
         """
         bad_response_mock = MagicMock()
-        bad_response_mock.json.return_value = {"message": "this is a test error"}
+        bad_response_mock.json.return_value = {"details": "this is a test error"}
         wbapi_mock.return_value.login.side_effect = WBAPIUnauthorizedError(response=bad_response_mock)
         r = self.client.post('/login', data=dict(username="test_user", password="test_pass"))
         self.assertEquals(r.status_code, 302)
@@ -172,8 +172,8 @@ class TestFECase(TestCase):
         """
         response_mock = MagicMock()
         response_mock.status_code = 500
-        response_mock.json.return_value = {"message": "An Error Message"}
+        response_mock.json.return_value = {"details": "An Error Message"}
         wbapi_mock.return_value.get_apps.side_effect = WBAPIHTTPError(response=response_mock)
         r = self.client.get('/')
         self.assertEquals(r.status_code, response_mock.status_code)
-        self.assertTrue(response_mock.json()["message"] in r.get_data())
+        self.assertTrue(response_mock.json()["details"] in r.get_data())
