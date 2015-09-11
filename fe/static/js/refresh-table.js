@@ -14,6 +14,8 @@ define(['filter-app-table-by-name'], function (filter_app_table_by_name) {
               $table.replaceWith($(data).find('#app-table'));
 
               filter_app_table_by_name.init();
+
+              $('.label.failed').closest('tr').addClass('error');
             }
           },
           error: config.error || function () {

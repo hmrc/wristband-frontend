@@ -43,6 +43,7 @@ def do_logout():
 def get_apps():
     try:
         apps = g.wb_api.get_apps()
+        stages = g.wb_api.get_stages()
     except WBAPIUnauthorizedError:
         return redirect(url_for('do_logout'))
 
@@ -53,6 +54,7 @@ def get_apps():
     else:
         return Response(render_template(
                         'index.html', apps=apps,
+                        stages=stages,
                         username=session.get("username", "anonymous")), headers=headers)
 
 

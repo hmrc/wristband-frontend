@@ -16,9 +16,9 @@ module.exports = function (app) {
   });
 
   app.all('/bad_and_slow/*', function (req, res, next) {
-    setInterval(function() {
+    setTimeout(function () {
       res.send(500, {"details": "a non-offensive message"});
-    },5000);
+    }, 5000);
   });
 
 
@@ -51,7 +51,7 @@ module.exports = function (app) {
     res.json(apps[req.params.name]);
   });
 
-  app.get('/stages/', function(req, res) {
+  app.get('/stages', function(req, res) {
     res.json(utils.asArray(stages));
   });
 
