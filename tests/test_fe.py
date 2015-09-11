@@ -14,7 +14,7 @@ class TestFECase(TestCase):
 
     def test_healthcheck(self):
         r = self.client.get('/ping/ping')
-        self.assertEquals(r.status_code, 200)
+        self.assertEquals(r.status_code, 204)
 
     #  Not sure why I need to do this after it's done in setUp??
     @patch('fe.WBAPI')
