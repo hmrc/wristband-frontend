@@ -30,7 +30,7 @@ def catch_api_http_exception(f):
 class WBAPI(object):
     def __init__(self, base_uri, connect_timeout=5, read_timeout=30):
         self.__base_uri = base_uri
-        self.__api_uri = "{}/api".format(base_uri)
+        self.__api_uri = urljoin(base_uri, "api/")
         self.__session = requests.Session()
         self.__timeout = (connect_timeout, read_timeout)
 
