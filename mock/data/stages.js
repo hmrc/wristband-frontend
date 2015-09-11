@@ -4,5 +4,8 @@ module.exports = {
   },
   "staging": {
     "name": "staging"
+  },
+  "prod": {
+    "name": "prod"
   }
 };

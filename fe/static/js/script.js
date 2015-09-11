@@ -7,6 +7,8 @@ define(['deploy-button', 'filter-app-table-by-name', 'refresh-table'],
     // filter-app-table-by-name: defines the behaviour for searching the apps table
     filter_app_table_by_name.init();
 
+    $('.label.failed').closest('tr').addClass('error');
+
     // to provide immediate feedback, all buttons should change state on click
     $('button').click(function () {
       $(this).addClass('loading');

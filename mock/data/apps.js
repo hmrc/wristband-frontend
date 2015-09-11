@@ -1,3 +1,5 @@
+var stages = require('./stages');
+
 var randomFrom = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
@@ -39,18 +41,22 @@ for (var i = 0, len = appNames.length; i < len; i++) {
 
   apps.push({
     "name": appNames[i],
-    "stages": [
-      {
-        "name": "qa",
-        "version": asVersion(number),
-        "status": status()
-      },
-      {
-        "name": "staging",
-        "version": asVersion(number - Math.floor(Math.random() * 3)),
-        "status": status()
+    "stages": (function () {
+      var arr = [];
+      var random = 0;
+
+      for (var stage in stages) {
+        random = random + Math.floor(Math.random() * 3);
+
+        arr.push({
+          "name": stage,
+          "version": asVersion(number - random),
+          "status": status()
+        });
       }
-    ]
+
+      return arr;
+    }())
   });
 }
 
