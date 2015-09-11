@@ -49,6 +49,7 @@ def get_apps():
 
     etag = '"{}"'.format(hash(json.dumps(sorted(apps, key=lambda a: a["name"]), sort_keys=True)))
     headers = {'ETag': etag}
+
     if request.headers.get('If-None-Match', None) == etag:
         return Response(None, 304, headers=headers)
     else:
@@ -88,6 +89,8 @@ def wb_error_handler(e):
         error["msg"] = e.response.json()["details"]
     except KeyError:
         error["msg"] = e.response.text
+    except ValueError:
+        error["msg"] = e.message
 
     return render_template('error.html', error=error), status_code
 

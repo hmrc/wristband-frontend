@@ -43,23 +43,23 @@ module.exports = function (app) {
     next();
   });
 
-  app.get('/apps', function(req, res) {
+  app.get('/api/apps', function(req, res) {
     res.json(apps.get());
   });
 
-  app.get('/apps/:name', function(req, res) {
+  app.get('/api/apps/:name', function(req, res) {
     res.json(apps[req.params.name]);
   });
 
-  app.get('/stages', function(req, res) {
+  app.get('/api/stages', function(req, res) {
     res.json(utils.asArray(stages));
   });
 
-  app.get('/stages/:name', function(req, res) {
+  app.get('/api/stages/:name', function(req, res) {
     res.json(stages[req.params.name]);
   });
 
-  app.put('/apps/:app/stages/:stage/version/:version', function(req, res) {
+  app.put('/api/apps/:app/stages/:stage/version/:version', function(req, res) {
     var app = utils.find(apps.get(), 'name', req.params.app);
     var stage = utils.find(app.stages, 'name', req.params.stage);
     var id = utils.id();
