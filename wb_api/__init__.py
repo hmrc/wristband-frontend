@@ -30,6 +30,7 @@ def catch_api_http_exception(f):
 class WBAPI(object):
     def __init__(self, base_uri, connect_timeout=5, read_timeout=30):
         self.__base_uri = base_uri
+        self.__api_uri = "{}/api".format(base_uri)
         self.__session = requests.Session()
         self.__timeout = (connect_timeout, read_timeout)
 
@@ -50,7 +51,7 @@ class WBAPI(object):
 
     @catch_api_http_exception
     def get_apps(self):
-        r = self.__session.get(urljoin(self.__base_uri, "api/apps/"), timeout=self.__timeout)
+        r = self.__session.get(urljoin(self.__api_uri, "apps/"), timeout=self.__timeout)
         r.raise_for_status()
         apps = r.json()
         return [
@@ -61,6 +62,6 @@ class WBAPI(object):
     @catch_api_http_exception
     def deploy_app(self, app, stage, version):
         r = self.__session.put(
-            urljoin(self.__base_uri, "api/apps/{}/stages/{}/version/{}".format(app, stage, version)),
+            urljoin(self.__api_uri, "apps/{}/stages/{}/version/{}".format(app, stage, version)),
             timeout=self.__timeout)
         r.raise_for_status()
