@@ -91,4 +91,4 @@ def wb_error_handler(e):
 
 
 def healthcheck():
-    return ('', 200)
+    return Response(None, 204)
