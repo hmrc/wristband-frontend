@@ -19,7 +19,7 @@ def catch_api_http_exception(f):
         try:
             r = f(*args, **kwds)
         except WBAPIHTTPError as e:
-            if e.response.status_code == 401:
+            if e.response.status_code in [401, 403]:
                 raise WBAPIUnauthorizedError(response=e.response)
             else:
                 raise
