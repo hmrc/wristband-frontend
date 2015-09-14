@@ -12,21 +12,29 @@ class TestWBAPICase(TestCase):
         self._requests_session = requests_session_mock()
 
     def test_bad_login_raises_WBAPIUnauthorizedError_exception(self):
-        class BadResponse(object):
+        class Response401(object):
             status_code = 401
 
+        class Response403(object):
+            status_code = 403
+
         self._requests_session.post.return_value.raise_for_status.side_effect = \
-            requests.HTTPError(response=BadResponse())
+            requests.HTTPError(response=Response401())
         with self.assertRaises(WBAPIUnauthorizedError):
             self._wb.login("test_user", "test_password")
 
         self._requests_session.get.return_value.raise_for_status.side_effect = \
-            requests.HTTPError(response=BadResponse())
+            requests.HTTPError(response=Response401())
         with self.assertRaises(WBAPIUnauthorizedError):
             self._wb.get_apps()
 
         self._requests_session.put.return_value.raise_for_status.side_effect = \
-            requests.HTTPError(response=BadResponse())
+            requests.HTTPError(response=Response401())
+        with self.assertRaises(WBAPIUnauthorizedError):
+            self._wb.deploy_app("test-app", "test-stage", "test-version")
+
+        self._requests_session.put.return_value.raise_for_status.side_effect = \
+            requests.HTTPError(response=Response403())
         with self.assertRaises(WBAPIUnauthorizedError):
             self._wb.deploy_app("test-app", "test-stage", "test-version")
 
