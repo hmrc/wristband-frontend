@@ -9,7 +9,8 @@ define(function () {
   // basic keys mapping
   var keys = {
     'ZERO': 48,
-    'BACKSPACE': 8
+    'BACKSPACE': 8,
+    'COMMAND': 91
   };
 
   var resultsTable;
@@ -37,20 +38,29 @@ define(function () {
     });
 
     $('body').off('keydown.filter').on('keydown.filter', function (e) {
-      if (e.which > keys.ZERO) {
+      if (e.which === keys.COMMAND) {
+        $(this).data('command-held', true);
+      }
+
+      if (!$('body').data('command-held') && e.which > keys.ZERO && e.which !== keys.COMMAND) {
         $('.search.form input').focus();
       }
     });
 
-    $('.search.form input').off('keyup.filter').on('keyup.filter', function (e) {
+    $('body').off('keyup.filter').on('keyup.filter', function (e) {
+      if (e.which === keys.COMMAND) {
+        $(this).data('command-held', false);
+      }
+    });
 
+    $('.search.form input').off('keyup.filter').on('keyup.filter', function (e) {
       /*
         if the user hasn't entered a 'valuable' key, such as a number, letter,
           symbol, or backspace. Intended to avoid lookups taking place when the
           user hits an arrow key, or any other key that isn't likely to have been
           hit in an attempt to search
       */
-      if (!(e.which > keys.ZERO || e.which === keys.BACKSPACE)) return false;
+      if ($('body').data('command-held') || e.which === keys.COMMAND || !(e.which > keys.ZERO || e.which === keys.BACKSPACE)) return false;
 
       clearTimeout(keyupTimeout);
 

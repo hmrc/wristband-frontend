@@ -34,3 +34,13 @@
     display: none !important;
   }
 }
+
+@keyframes pulsate {
+  0% {transform: scale(1); opacity: 1;}
+  50% {transform: scale(1.01); opacity: 0.25;}
+  100% {transform: scale(1); opacity: 1;}
+}
+
+.highlight {
+  animation: pulsate 1s ease-in-out 2;
+}

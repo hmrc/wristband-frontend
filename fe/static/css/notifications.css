@@ -1,0 +1,29 @@
+.right.menu .dropdown.button {
+  left: 20px;
+}
+
+.right.menu .dropdown.button .red.label {
+  transform: scale(0.85);
+}
+
+.notifications {
+  width: 320px;
+}
+
+.menu > .feed {
+  padding: 0 20px 10px 10px;
+  white-space: normal !important;
+}
+
+.menu .summary {
+  font-weight: normal !important;
+  line-height: 1.2em;
+}
+
+.menu .summary a {
+  font-weight: 700;
+}
+
+.menu .right.arrow {
+  transform: scale(0.85);
+}

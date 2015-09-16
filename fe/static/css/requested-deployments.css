@@ -1,0 +1,8 @@
+.requested .steps {
+  width: 320px;
+}
+
+.requested .steps .label {
+  padding-top: 7px !important;
+  text-align: right !important;
+}

@@ -18,9 +18,20 @@
     Wristband
   </span>
   <div class="right menu">
-    <span class="ui item">
+    <div class="ui item">
       <strong class="large-only">{{ username }}&nbsp;</strong>(<a href="logout">logout</a>)
-    </span>
+
+      <div class="ui icon top right pointing dropdown button basic">
+        <i class="alarm outline icon"></i>
+        <span class="floating ui red label" style="display: none;"></span>
+
+        <div class="menu notifications">
+          <div class="header">Notifications</div>
+          <div class="ui feed"></div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -49,7 +60,7 @@
   </thead>
   <tbody>
     {% for app in apps %}
-      <tr class="{% if "jobid" in app.stages.staging %}deploying{% endif %}">
+      <tr id="{{ app.name }}" class="{% if "jobid" in app.stages.staging %}deploying{% endif %}">
         <td class="app left aligned">
           <h2 class="ui header">
             {{ app.name }}
@@ -61,7 +72,7 @@
           <td class="stage">
             {% if stage.name in app.stages %}
               <span class="mobile-only">{{ stage.name }} </span>
-              <span class="ui label large {{ app.stages[stage.name].status }}">{{ app.stages[stage.name].version }}</span>
+              <span title="{{ app.stages[stage.name].version }}" class="ui label large {{ app.stages[stage.name].status }}">{{ app.stages[stage.name].version }}</span>
             {% endif %}
           </td>
 
@@ -69,7 +80,36 @@
             <td class="deploy">
               {% if stage.name in app.stages %}
 
-                {% if
+                {% if app.stages[stages[loop.index].name].status == "requested" %}
+
+                  <div id="{{ app.name }}-{{ stage.name }}-requested" class="ui icon top right pointing dropdown button basic requested">
+                    Requested
+                    <div class="menu steps">
+                      <div class="header">Production deployment</div>
+                      <div class="ui feed">
+                        <div class="event">
+                          <div class="label">1.</div>
+                          <div class="content">
+                            <div class="summary"><strong>john.norris</strong> requested a production deployment of <strong>{{ app.name }}</strong> for <strong>25/09/2015 13:00</strong><div class="date">1 Hour Ago</div></div>
+                          </div>
+                        </div>
+                        <div class="event">
+                          <div class="label">2.</div>
+                          <div class="content">
+                            <div class="summary">Awaiting PO approval - <a class="approve">Approve</a></div>
+                          </div>
+                        </div>
+                        <div class="event">
+                          <div class="label">3.</div>
+                          <div class="content">
+                            <div class="summary">Awaiting WebOps approval</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                {% elif
                     (stages[loop.index].name not in app.stages) or
                     (app.stages[stages[loop.index].name].status == "failed") or
                     (stages[loop.index].name in app.stages and (app.stages[stage.name].version != app.stages[stages[loop.index].name].version)) %}
@@ -78,7 +118,7 @@
                     <input type="hidden" name="app" value="{{ app.name }}">
                     <input type="hidden" name="version" value="{{ app.stages[stage.name].version }}">
                     <input type="hidden" name="stage" value="{{ stages[loop.index].name }}">
-                    <button class="ui basic teal right labeled icon button">
+                    <button class="ui basic teal right labeled icon button deploy">
                       <i class="right arrow icon large-only"></i>
                       <i class="down arrow icon mobile-only"></i>
                       <span class="text">Deploy</span>
@@ -94,7 +134,7 @@
 
                 {% else %}
 
-                  <button class="ui button basic disabled" disabled="disabled">Deployed</button>
+                  <i class="checkmark icon deployed"></i>
 
                 {% endif %}
 

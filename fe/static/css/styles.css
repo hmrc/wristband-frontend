@@ -4,6 +4,8 @@
 @import 'search-form.css';
 @import 'menu.css';
 @import 'error.css';
+@import 'notifications.css';
+@import 'requested-deployments.css';
 
 html, body, .container {
   height: 100%;

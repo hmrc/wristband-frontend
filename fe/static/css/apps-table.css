@@ -34,17 +34,35 @@
   transition: none;
 }
 
+.ui.label {
+  max-width: 60px;
+  overflow: hidden;
+}
+
 .ui.label.failed {
   background: #ebb;
 }
 
-.ui.button.teal:hover, .ui.button.teal:focus {
+.ui.deploy.button {
+  background: #fff !important;
+}
+
+.ui.basic.deploy.button:hover, .ui.basic.deploy.button:focus {
+  box-shadow: 0 0 10px #00b5ad !important;
+  background: #fff !important;
+}
+
+.table .ui.button.teal:hover, .table .ui.button.teal:focus {
   background: #00b5ad;
 }
 
-.table .deploying .header {
+.table .deploying .app .header {
   font-weight: 500;
   letter-spacing: -1px;
   color: #00b5ad;
   margin-left: 3px;
+}
+
+.table .deployed {
+  color: rgba(0,0,0,0.2);
 }

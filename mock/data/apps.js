@@ -13,8 +13,13 @@ var asVersion = function (number) {
   return number[0] + '.' + number[1] + '.' + number[2];
 };
 
-var status = function () {
-  return Math.random() > 0.95 ? 'failed' : 'success';
+var status = function (stage) {
+  var rand = Math.random();
+
+  if (rand > 0.95) return 'failed';
+  if (rand < 0.05 && stage === 'prod') return 'requested';
+
+  return 'success';
 };
 
 var names = ['jenkins', 'lanyard', 'database', 'play', 'micro', 'snail', 'react', 'atom', 'app', 'rpm', 'cache', 'json', 'time', 'secure', 'url', 'open'];
@@ -50,8 +55,8 @@ for (var i = 0, len = appNames.length; i < len; i++) {
 
         arr.push({
           "name": stage,
-          "version": asVersion(number - random),
-          "status": status()
+          "version": asVersion(number - random) + (Math.random() > 0.95 ? '-beta-version' : ''),
+          "status": status(stage)
         });
       }
 

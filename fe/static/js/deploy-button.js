@@ -3,7 +3,6 @@
 */
 
 define(function () {
-
   /*
     in case we want to change the Semantic UI colour scheme later -
       http://semantic-ui.com/elements/button.html#colored
@@ -23,7 +22,7 @@ define(function () {
 
   var init = function () {
 
-    $('body').on('click', '.deploy .button', function (e) {
+    $('body').on('click', '.deploy .deploy.button', function (e) {
       // prevent the form from submitting
       e.preventDefault();
 

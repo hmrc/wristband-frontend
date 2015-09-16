@@ -5,33 +5,45 @@
 {% block body %}
 
 <form action="/login" method="post" class="ui login form vertical-align{% if error == 'bad_login' %} error{% endif %}">
-    <div class="ui secondary pointing menu">
-      <span class="active item">
-        Wristband
-      </span>
-    </div>
+  <div class="ui secondary pointing menu">
+    <span class="active item">
+      Wristband
+    </span>
+  </div>
 
-    <div class="ui error message">
-      <p>{{ error_message or "An error occured logging in to the API" }}</p>
-    </div>
+  <div class="ui error message">
+    <p>{{ error_message or "An error occured logging in to the API" }}</p>
+  </div>
 
-    <div class="three fields">
-
+  <div class="ui grid">
+    <div class="sixteen wide tablet seven wide computer column">
       <div class="field">
         <div class="ui input huge">
           <input type="text" name="username" placeholder="Username">
         </div>
       </div>
+    </div>
 
+    <div class="sixteen wide tablet five wide computer column">
       <div class="field">
         <div class="ui input huge">
           <input type="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
         </div>
       </div>
 
-      <button type="submit" class="ui big teal button">Login</button>
-
+      <div class="field">
+        <!-- This needs changing to match the actual LDAP reset password url -->
+        <a href="#reset-password" target="_blank">Forgotten password?</a>
+      </div>
     </div>
+
+    <div class="sixteen wide tablet four wide computer column">
+      <div class="field">
+        <button type="submit" class="ui fluid huge teal button align-right">Login</button>
+      </div>
+    </div>
+  </div>
+
 </form>
 
 {% endblock %}

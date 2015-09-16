@@ -12,3 +12,8 @@
 .login.form .secondary.menu {
   margin-bottom: 1em;
 }
+
+.login.form .button {
+  padding-left: 0;
+  padding-right: 0;
+}
