@@ -141,6 +141,11 @@ class TestWBAPICase(TestCase):
         self._requests_session.cookies.get_dict.return_value = cookies
         self.assertEquals(cookies, self._wb.get_session_cookies())
 
+    def test_get_session_cookies_doesnt_return_csrftoken_cookie(self):
+        cookies = {"cookie1": "junk", "csrftoken": "bad"}
+        self._requests_session.cookies.get_dict.return_value = cookies
+        self.assertEquals({"cookie1": "junk"}, self._wb.get_session_cookies())
+
     def test_set_session_cookies_returns_cookies(self):
         cookies = {"cookie1": "junk"}
         self._wb.set_session_cookies(cookies)
