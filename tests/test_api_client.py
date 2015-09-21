@@ -133,7 +133,7 @@ class TestWBAPICase(TestCase):
     def test_deploy_app_hits_api(self):
         self._wb.deploy_app("app-1", "staging", "1.2.3")
         self._requests_session.put.assert_called_with(
-            "{}api/apps/app-1/stages/staging/version/1.2.3".format(self._api_uri),
+            "{}api/apps/app-1/stages/staging/version/1.2.3/".format(self._api_uri),
             timeout=(5, 30))
 
     def test_get_session_cookies_returns_cookies(self):
