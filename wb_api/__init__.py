@@ -38,7 +38,8 @@ class WBAPI(object):
         self.__session.cookies.update(cookies)
 
     def get_session_cookies(self):
-        return self.__session.cookies.get_dict()
+        session_cookies = self.__session.cookies.get_dict()
+        return {k: v for k, v in session_cookies.items() if k.lower() != "csrftoken"}
 
     @catch_api_http_exception
     def login(self, username, password):
