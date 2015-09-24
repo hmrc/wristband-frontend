@@ -6,7 +6,7 @@ from wb_api import WBAPI, WBAPIHTTPError
 def get_api_before_request():
     g.wb_api = WBAPI(current_app.config["API_URI"])
     try:
-        g.wb_api.set_session_cookies(session["api_cookies"])
+        g.wb_api.set_token(session["api_token"])
     except KeyError:
         pass
 

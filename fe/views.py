@@ -16,7 +16,7 @@ import json
 
 
 def get_login():
-    if "api_cookies" in session:
+    if "api_token" in session:
         return redirect(url_for('get_apps'))
     error = request.args.get('error', None)
     error_message = request.args.get('error_msg', None)
@@ -31,7 +31,7 @@ def do_login():
         return redirect(url_for('get_login', error="bad_login",
                                 error_msg=e.response.json()["details"]))
     session["username"] = request.form["username"]
-    session["api_cookies"] = g.wb_api.get_session_cookies()
+    session["api_token"] = g.wb_api.get_token()
     return redirect(url_for('get_apps'))
 
 
