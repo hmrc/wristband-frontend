@@ -136,7 +136,7 @@ class TestWBAPICase(TestCase):
             "{}api/apps/app-1/stages/staging/version/1.2.3/".format(self._api_uri),
             timeout=(5, 30))
 
-    def test_get_token_returns_cookies(self):
+    def test_get_token_returns_token(self):
         token = "thing"
         headers = {"Authorization": "Token {}".format(token)}
         self._requests_session.headers = headers

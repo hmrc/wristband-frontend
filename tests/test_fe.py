@@ -19,7 +19,7 @@ class TestFECase(TestCase):
     #  Not sure why I need to do this after it's done in setUp??
     @patch('fe.WBAPI')
     def test_post_login_stores_api_token_and_username_in_session(self, wbapi_mock):
-        """ POST /login with good user stores api_cookies in session
+        """ POST /login with good user stores api_token in session
         """
         token = "thing"
         wbapi_mock.return_value.get_token.return_value = token
@@ -32,7 +32,7 @@ class TestFECase(TestCase):
     @patch('fe.WBAPI')
     def test_post_login_clears_existing_session(self, wbapi_mock):
         """ POST /login clears all exisiting session cookies
-            This ensures that bad/expired api_cookies will be cleared
+            This ensures that a bad/expired api_token will be cleared
         """
         with self.client.session_transaction() as sess:
             sess["shouldnt_be_here"] = True
@@ -65,8 +65,8 @@ class TestFECase(TestCase):
         with self.client.session_transaction() as sess:
             self.assertFalse(sess)
 
-    def test_get_login_when_no_api_cookies_returns_login(self):
-        """ GET /login presents login when no api_cookies are present in the session
+    def test_get_login_when_no_api_token_cookie_returns_login(self):
+        """ GET /login presents login when no api_token is present in the session
         """
         r = self.client.get('/login')
         self.assertEquals(r.status_code, 200)
