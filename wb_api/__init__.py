@@ -34,21 +34,25 @@ class WBAPI(object):
         self.__session = requests.Session()
         self.__timeout = (connect_timeout, read_timeout)
 
-    def set_session_cookies(self, cookies):
-        self.__session.cookies.update(cookies)
+    def get_token(self):
+        try:
+            return self.__session.headers['Authorization'].split()[1]
+        except KeyError:
+            return None
 
-    def get_session_cookies(self):
-        session_cookies = self.__session.cookies.get_dict()
-        return {k: v for k, v in session_cookies.items() if k.lower() != "csrftoken"}
+    def set_token(self, token):
+        self.__session.headers['Authorization'] = "Token {}".format(token)
 
     @catch_api_http_exception
     def login(self, username, password):
         session = self.__session
 
         r = session.post(
-            urljoin(self.__base_uri, "login/"),
+            urljoin(self.__base_uri, "token/"),
             {"username": username, "password": password}, timeout=self.__timeout)
         r.raise_for_status()
+        token = r.json()['token']
+        self.set_token(token)
 
     @catch_api_http_exception
     def get_apps(self):

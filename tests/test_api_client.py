@@ -136,17 +136,15 @@ class TestWBAPICase(TestCase):
             "{}api/apps/app-1/stages/staging/version/1.2.3/".format(self._api_uri),
             timeout=(5, 30))
 
-    def test_get_session_cookies_returns_cookies(self):
-        cookies = {"cookie1": "junk"}
-        self._requests_session.cookies.get_dict.return_value = cookies
-        self.assertEquals(cookies, self._wb.get_session_cookies())
+    def test_get_token_returns_token(self):
+        token = "thing"
+        headers = {"Authorization": "Token {}".format(token)}
+        self._requests_session.headers = headers
+        self.assertEquals(token, self._wb.get_token())
 
-    def test_get_session_cookies_doesnt_return_csrftoken_cookie(self):
-        cookies = {"cookie1": "junk", "csrftoken": "bad"}
-        self._requests_session.cookies.get_dict.return_value = cookies
-        self.assertEquals({"cookie1": "junk"}, self._wb.get_session_cookies())
-
-    def test_set_session_cookies_returns_cookies(self):
-        cookies = {"cookie1": "junk"}
-        self._wb.set_session_cookies(cookies)
-        self._requests_session.cookies.update.assert_called_with(cookies)
+    def test_set_token_sends_token_header(self):
+        token = "thing"
+        self._wb.set_token(token)
+        print self._requests_session.headers.mock_calls
+        self._requests_session.headers.__setitem__.assert_called_with(
+            'Authorization', "Token {}".format(token))

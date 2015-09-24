@@ -18,27 +18,27 @@ class TestFECase(TestCase):
 
     #  Not sure why I need to do this after it's done in setUp??
     @patch('fe.WBAPI')
-    def test_post_login_stores_api_cookies_and_username_in_session(self, wbapi_mock):
-        """ POST /login with good user stores api_cookies in session
+    def test_post_login_stores_api_token_and_username_in_session(self, wbapi_mock):
+        """ POST /login with good user stores api_token in session
         """
-        api_cookies = {"test": "cookie"}
-        wbapi_mock.return_value.get_session_cookies.return_value = api_cookies
+        token = "thing"
+        wbapi_mock.return_value.get_token.return_value = token
         self.client.post('/login', data=dict(username="test_user", password="test_pass"))
         with self.client.session_transaction() as sess:
             self.assertTrue(sess)
-            self.assertEquals(sess["api_cookies"], api_cookies)
+            self.assertEquals(sess["api_token"], token)
             self.assertEquals(sess["username"], "test_user")
 
     @patch('fe.WBAPI')
     def test_post_login_clears_existing_session(self, wbapi_mock):
         """ POST /login clears all exisiting session cookies
-            This ensures that bad/expired api_cookies will be cleared
+            This ensures that a bad/expired api_token will be cleared
         """
         with self.client.session_transaction() as sess:
             sess["shouldnt_be_here"] = True
         with self.client.session_transaction() as sess:
             self.assertTrue("shouldnt_be_here" in sess)
-        self.test_post_login_stores_api_cookies_and_username_in_session()
+        self.test_post_login_stores_api_token_and_username_in_session()
         with self.client.session_transaction() as sess:
             self.assertTrue("shouldnt_be_here" not in sess)
 
@@ -60,13 +60,13 @@ class TestFECase(TestCase):
     def test_logout_clears_session(self):
         """ GET /logout clear all session cookies
         """
-        self.test_post_login_stores_api_cookies_and_username_in_session()
+        self.test_post_login_stores_api_token_and_username_in_session()
         self.client.get('/logout')
         with self.client.session_transaction() as sess:
             self.assertFalse(sess)
 
-    def test_get_login_when_no_api_cookies_returns_login(self):
-        """ GET /login presents login when no api_cookies are present in the session
+    def test_get_login_when_no_api_token_cookie_returns_login(self):
+        """ GET /login presents login when no api_token is present in the session
         """
         r = self.client.get('/login')
         self.assertEquals(r.status_code, 200)
@@ -74,7 +74,7 @@ class TestFECase(TestCase):
     def test_get_login_when_already_logged_in_redirects_to_get_apps(self):
         """ GET /login in when already logged in redirects to /
         """
-        self.test_post_login_stores_api_cookies_and_username_in_session()
+        self.test_post_login_stores_api_token_and_username_in_session()
         r = self.client.get('/login')
         self.assertEquals(r.status_code, 302)
         self.assertEquals(r.location, "http://localhost/")
@@ -83,7 +83,7 @@ class TestFECase(TestCase):
     def test_get_apps_calls_WBAPI(self, wbapi_mock):
         """ GET / results in the WBAPI class being called
         """
-        self.test_post_login_stores_api_cookies_and_username_in_session()
+        self.test_post_login_stores_api_token_and_username_in_session()
         self.client.get('/')
         wbapi_mock().get_apps.assert_called_with()
 
@@ -128,7 +128,7 @@ class TestFECase(TestCase):
                 }
             }
         ]
-        self.test_post_login_stores_api_cookies_and_username_in_session()
+        self.test_post_login_stores_api_token_and_username_in_session()
         r = self.client.get('/')
         etag, _ = r.get_etag()
         self.assertTrue(etag is not None)
@@ -156,7 +156,7 @@ class TestFECase(TestCase):
                 }
             }
         ]
-        self.test_post_login_stores_api_cookies_and_username_in_session()
+        self.test_post_login_stores_api_token_and_username_in_session()
         r = self.client.get('/')
         etag, _ = r.get_etag()
         wbapi_mock.return_value.get_apps.return_value.reverse()
@@ -168,7 +168,7 @@ class TestFECase(TestCase):
     def test_deploy_app_calls_WBAPI(self, wbapi_mock):
         """ POST /deploy calls WBAPI methods
         """
-        self.test_post_login_stores_api_cookies_and_username_in_session()
+        self.test_post_login_stores_api_token_and_username_in_session()
         self.client.post('/deploy', data=dict(app="test", stage="test", version="test"))
         wbapi_mock().deploy_app.assert_called_with("test", "test", "test")
 
