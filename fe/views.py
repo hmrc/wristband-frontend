@@ -9,7 +9,7 @@ __all__ = [
 ]
 
 from flask import render_template, request, redirect, url_for
-from flask import session, g
+from flask import session, g, current_app
 from flask import Response
 from wb_api import WBAPIUnauthorizedError
 import json
@@ -20,7 +20,7 @@ def get_login():
         return redirect(url_for('get_apps'))
     error = request.args.get('error', None)
     error_message = request.args.get('error_msg', None)
-    return render_template('login.html', error=error, error_message=error_message)
+    return render_template('login.html', error=error, error_message=error_message, password_reset_message=current_app.config["PASSWORD_RESET_MESSAGE"])
 
 
 def do_login():
