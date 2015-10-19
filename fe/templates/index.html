@@ -61,7 +61,7 @@
           <td class="stage">
             {% if stage.name in app.stages %}
               <span class="mobile-only">{{ stage.name }} </span>
-              <span class="ui label large {{ app.stages[stage.name].status }}">{{ app.stages[stage.name].version }}</span>
+              <span class="ui label large {{ app.stages[stage.name].state }}">{{ app.stages[stage.name].version }}</span>
             {% endif %}
           </td>
 
@@ -71,10 +71,10 @@
 
                 {% if
                     (stages[loop.index].name not in app.stages) or
-                    (app.stages[stages[loop.index].name].status == "failed") or
+                    (app.stages[stages[loop.index].name].state != "healthy") or
                     (stages[loop.index].name in app.stages and (app.stages[stage.name].version != app.stages[stages[loop.index].name].version)) %}
 
-                  <form action="/deploy" method="post"{% if "jobid" in app.stages[stages[loop.index].name] %} style="display: none;"{% endif %}>
+                  <form action="/deploy" method="post"{% if stages[loop.index].name in app.stages and app.stages[stages[loop.index].name].state != "healthy" %} style="display: none;"{% endif %}>
                     <input type="hidden" name="app" value="{{ app.name }}">
                     <input type="hidden" name="version" value="{{ app.stages[stage.name].version }}">
                     <input type="hidden" name="stage" value="{{ stages[loop.index].name }}">
@@ -85,7 +85,7 @@
                     </button>
                   </form>
 
-                  <div class="ui buttons"{% if "jobid" not in app.stages[stages[loop.index].name] %} style="display: none;"{% endif %}>
+                  <div class="ui buttons"{% if stages[loop.index].name not in app.stages or app.stages[stages[loop.index].name].state == "healthy" %} style="display: none;"{% endif %}>
                     <button class="ui teal right icon button" tabindex="-1">
                       <span class="text">{{ app.stages[stage.name].version }} <i class="right arrow icon large-only"></i><i class="down arrow icon mobile-only"></i></span>
                     </button>
