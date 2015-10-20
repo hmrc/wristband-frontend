@@ -27,6 +27,14 @@ def catch_api_http_exception(f):
     return wrapper
 
 
+class FakeResponse(object):
+    content = None
+    status_code = None
+
+    def json(self):
+        return self.content
+
+
 class WBAPI(object):
     def __init__(self, base_uri, connect_timeout=5, read_timeout=30):
         self.__base_uri = base_uri
@@ -50,7 +58,18 @@ class WBAPI(object):
         r = session.post(
             urljoin(self.__base_uri, "token/"),
             {"username": username, "password": password}, timeout=self.__timeout)
-        r.raise_for_status()
+        try:
+            r.raise_for_status()
+        except WBAPIHTTPError as e:
+            try:
+                assert e.response.json()["non_field_errors"][0] == "Unable to log in with provided credentials."
+            except:
+                raise e
+            fake_response = FakeResponse()
+            fake_response.content = {"details": e.response.json()["non_field_errors"][0]}
+            fake_response.status_code = 401
+            unauthed_exception = WBAPIUnauthorizedError(response=fake_response)
+            raise unauthed_exception
         token = r.json()['token']
         self.set_token(token)
 
