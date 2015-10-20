@@ -4,7 +4,7 @@ define(['filter-app-table-by-name'], function (filter_app_table_by_name) {
 
     if ($('table').length > 0) {
 
-      setInterval(function () {
+      function refreshTable() {
         $.ajax({
           url: window.location.href,
           success: function (data) {
@@ -21,9 +21,13 @@ define(['filter-app-table-by-name'], function (filter_app_table_by_name) {
           error: config.error || function () {
             // if there's an error, you're probably not logged in, so reload
             window.location.reload();
+          },
+          complete: function () {
+            setTimeout(refreshTable, config.seconds * 1000);
           }
         });
-      }, config.seconds * 1000);
+      };
+      refreshTable();
     }
   };
 
