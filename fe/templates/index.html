@@ -76,7 +76,7 @@
                     (app.stages[next_stage.name].state != "healthy") or
                     (next_stage.name in app.stages and (current_stage_app.version != app.stages[next_stage.name].version)) %}
 
-                  <form action="/deploy" method="post"{% if next_stage.name in app.stages and app.stages[next_stage.name].state != "healthy" %} style="display: none;"{% endif %}>
+                  <form action="/deploy" method="post"{% if next_stage.name in app.stages and app.stages[next_stage.name].state in [ "healthy", "deployment_requested" ] and app.stages[next_stage.name].version == current_stage_app.version %} style="display: none;"{% endif %}>
                     <input type="hidden" name="app" value="{{ app.name }}">
                     <input type="hidden" name="version" value="{{ current_stage_app.version }}">
                     <input type="hidden" name="stage" value="{{ next_stage.name }}">
@@ -87,7 +87,7 @@
                     </button>
                   </form>
 
-                  <div class="ui buttons"{% if next_stage.name not in app.stages or app.stages[next_stage.name].state == "healthy" %} style="display: none;"{% endif %}>
+                  <div class="ui buttons"{% if next_stage.name not in app.stages or app.stages[next_stage.name].state != "deployment_requested" %} style="display: none;"{% endif %}>
                     <button class="ui teal right icon button" tabindex="-1">
                       <span class="text">{{ current_stage_app.version }} <i class="right arrow icon large-only"></i><i class="down arrow icon mobile-only"></i></span>
                     </button>
