@@ -5,6 +5,9 @@ __all__ = [
 
 import requests
 from requests.exceptions import HTTPError as WBAPIHTTPError
+from requests.packages.urllib3.util import Retry
+from requests.adapters import HTTPAdapter
+
 from urlparse import urljoin
 from functools import wraps
 
@@ -39,7 +42,13 @@ class WBAPI(object):
     def __init__(self, base_uri, connect_timeout=5, read_timeout=30):
         self.__base_uri = base_uri
         self.__api_uri = urljoin(base_uri, "api/")
+
         self.__session = requests.Session()
+        requests_http_adapter = HTTPAdapter(
+            Retry(total=10, status_forcelist=[502, 500], backoff_factor=0.5))
+        self.__session.mount('https://', requests_http_adapter)
+        self.__session.mount('http://', requests_http_adapter)
+
         self.__timeout = (connect_timeout, read_timeout)
 
     def get_token(self):
