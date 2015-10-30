@@ -64,7 +64,7 @@
           <td class="stage">
             {% if current_stage.name in app.stages %}
               <span class="mobile-only">{{ current_stage.name }} </span>
-              <span class="ui label large {{ "green" if current_stage_app.state == "healthy" else "blue" if current_stage_app.state == "deployment_requested" else "red" }}"><a href="{{ current_stage_app.log_url }}">{{ current_stage_app.version }}</a></span>
+              <span class="ui label large {{ "green" if current_stage_app.state == "healthy" else "blue" if current_stage_app.state == "deployment_requested" else "red" }}"><a target="_blank" href="{{ current_stage_app.log_url }}">{{ current_stage_app.version }}</a></span>
             {% endif %}
           </td>
 
