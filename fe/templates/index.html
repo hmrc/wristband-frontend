@@ -58,26 +58,28 @@
 
         {% for stage in stages %}
 
+          {% set current_stage = stage %}
+          {% set current_stage_app = app.stages[current_stage.name] %}
+          {% set next_stage = stages[loop.index] %}
           <td class="stage">
-            {% if stage.name in app.stages %}
-              <span class="mobile-only">{{ stage.name }} </span>
-              <span class="ui label large {{ app.stages[stage.name].status }}">{{ app.stages[stage.name].version }}</span>
+            {% if current_stage.name in app.stages %}
+              <span class="mobile-only">{{ current_stage.name }} </span>
+              <span class="ui label large {{ "green" if current_stage_app.state == "healthy" else "blue" if current_stage_app.state == "deployment_requested" else "red" }}">{{ current_stage_app.version }}</span>
             {% endif %}
           </td>
 
           {% if not loop.last %}
             <td class="deploy">
-              {% if stage.name in app.stages %}
-
+              {% if current_stage.name in app.stages %}
                 {% if
-                    (stages[loop.index].name not in app.stages) or
-                    (app.stages[stages[loop.index].name].status == "failed") or
-                    (stages[loop.index].name in app.stages and (app.stages[stage.name].version != app.stages[stages[loop.index].name].version)) %}
+                    (next_stage.name not in app.stages) or
+                    (app.stages[next_stage.name].state != "healthy") or
+                    (next_stage.name in app.stages and (current_stage_app.version != app.stages[next_stage.name].version)) %}
 
-                  <form action="/deploy" method="post"{% if "jobid" in app.stages[stages[loop.index].name] %} style="display: none;"{% endif %}>
+                  <form action="/deploy" method="post"{% if next_stage.name in app.stages and app.stages[next_stage.name].state in [ "healthy", "deployment_requested" ] and app.stages[next_stage.name].version == current_stage_app.version %} style="display: none;"{% endif %}>
                     <input type="hidden" name="app" value="{{ app.name }}">
-                    <input type="hidden" name="version" value="{{ app.stages[stage.name].version }}">
-                    <input type="hidden" name="stage" value="{{ stages[loop.index].name }}">
+                    <input type="hidden" name="version" value="{{ current_stage_app.version }}">
+                    <input type="hidden" name="stage" value="{{ next_stage.name }}">
                     <button class="ui basic teal right labeled icon button">
                       <i class="right arrow icon large-only"></i>
                       <i class="down arrow icon mobile-only"></i>
@@ -85,9 +87,9 @@
                     </button>
                   </form>
 
-                  <div class="ui buttons"{% if "jobid" not in app.stages[stages[loop.index].name] %} style="display: none;"{% endif %}>
+                  <div class="ui buttons"{% if next_stage.name not in app.stages or app.stages[next_stage.name].state != "deployment_requested" %} style="display: none;"{% endif %}>
                     <button class="ui teal right icon button" tabindex="-1">
-                      <span class="text">{{ app.stages[stage.name].version }} <i class="right arrow icon large-only"></i><i class="down arrow icon mobile-only"></i></span>
+                      <span class="text">{{ current_stage_app.version }} <i class="right arrow icon large-only"></i><i class="down arrow icon mobile-only"></i></span>
                     </button>
                     <button class="ui button loading teal" tabindex="-1"></button>
                   </div>
