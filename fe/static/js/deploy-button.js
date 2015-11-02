@@ -45,7 +45,8 @@ define(function () {
               button was clicked, and a deployment is in progress
           */
         },
-        error: function () {
+        error: function (error) {
+          console.log("deploy button hit an arror - ", error);
           /*
             it's more likely we'll need to handle errors relating to the deploy
               e.g. if the version is invalid, or communication error

@@ -5,6 +5,9 @@ __all__ = [
 
 import requests
 from requests.exceptions import HTTPError as WBAPIHTTPError
+from requests.packages.urllib3.util import Retry
+from requests.adapters import HTTPAdapter
+
 from urlparse import urljoin
 from functools import wraps
 
@@ -27,11 +30,25 @@ def catch_api_http_exception(f):
     return wrapper
 
 
+class FakeResponse(object):
+    content = None
+    status_code = None
+
+    def json(self):
+        return self.content
+
+
 class WBAPI(object):
     def __init__(self, base_uri, connect_timeout=5, read_timeout=30):
         self.__base_uri = base_uri
         self.__api_uri = urljoin(base_uri, "api/")
+
         self.__session = requests.Session()
+        requests_http_adapter = HTTPAdapter(
+            Retry(total=10, status_forcelist=[502, 500], backoff_factor=0.5))
+        self.__session.mount('https://', requests_http_adapter)
+        self.__session.mount('http://', requests_http_adapter)
+
         self.__timeout = (connect_timeout, read_timeout)
 
     def get_token(self):
@@ -50,7 +67,18 @@ class WBAPI(object):
         r = session.post(
             urljoin(self.__base_uri, "token/"),
             {"username": username, "password": password}, timeout=self.__timeout)
-        r.raise_for_status()
+        try:
+            r.raise_for_status()
+        except WBAPIHTTPError as e:
+            try:
+                assert e.response.json()["non_field_errors"][0] == "Unable to log in with provided credentials."
+            except:
+                raise e
+            fake_response = FakeResponse()
+            fake_response.content = {"details": e.response.json()["non_field_errors"][0]}
+            fake_response.status_code = 401
+            unauthed_exception = WBAPIUnauthorizedError(response=fake_response)
+            raise unauthed_exception
         token = r.json()['token']
         self.set_token(token)
 
