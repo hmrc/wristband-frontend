@@ -16,7 +16,7 @@ Installation
 
 *n.b. You also need to have the `wristband` API running locally to run the frontend. See the [Wristband API installation instructions here](https://github.com/hmrc/wristband)*
 
-- `$ git clone https://github.tools.tax.service.gov.uk/HMRC/wristband-frontend.git`
+- `$ git clone https://github.com/hmrc/wristband-frontend.git`
 - `$ cd wristband-frontend`
 - `$ pip install -r requirements.txt`
 - `$ python wsgi.py`
